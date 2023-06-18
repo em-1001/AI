@@ -78,7 +78,7 @@ Triggerless 백도어 공격은 drop out 기술과 백도어 공겨을 위해 �
 기존까지 사용하고 있던 Neural Network방식은 FCNN(Fully Connected Neural Network)로써, 모든 노드들이 전부 연결되어 있다.(왼쪽)
 그런데 Drop out이 적용된 방식은 오른쪽이미지처럼, 중간중간의 노드들을 죽여버리고 랜덤하게 연결하여 학습을 진행하는 것이다. 
 
-#### drop out
+### drop out
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/f2176720-701a-464e-b27e-42bcc418f653" height="60%" width="60%"></p>
 
 triggerless backdoor를 만들기 위해 연구원들은 인공 신경망의 dropout layers를 사용했다. 
@@ -87,7 +87,7 @@ Drop-out은 서로 연결된 연결망(layer)에서 0부터 1 사이의 �
 어느 특정 특성이 출력값에 큰 상관관계가 있다고 하면(예를 들면 토끼의 귀), drop-out을 적용하지 않고 학습을 할 때 해당 특성에 가중치가 크게 설정되어 나머지 특성에 대해서는 제대로 학습이 되지 않는 과대적합문제가 발생할 수 있다. 
 Drop-out은 이렇게 특정 특성에만 출력값이 좌지우지되는 과대적합 문제를 해결할 수 있다. 
 
-#### Overfitting
+### Overfitting
 
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/02a604ef-bb41-4be9-966e-eae3e588033e" height="70%" width="70%"></p>
 
