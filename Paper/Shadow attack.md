@@ -60,11 +60,17 @@ $\sigma \cdot \phi^{-1}(p)$ radius안에서 provably robust하다고 할 수 있
 이는 수학적으로 논문에서 증명된 내용이고 이 공식에 따라 특정한 이미지가 특정 범위안에서는 이동을 해도 Adversarial example이 만들어지지 않느다는 것을 보장할 수 있게된다. 
 참고로 $\phi^{-1}$는 어떠한 정규분포가 있을 때의 inverse CDF 값이다. 
 
-예를 들어서 어떤 이미지가 80%의 확률로 고양이라 분류되었다고 하고, 학습 시킬때의 $sigma$를 0.5로 두었다고 할 때, 
+$$r = \sigma \cdot \phi^{-1}(p)$$
+
+예를 들어서 어떤 이미지가 80%의 확률로 고양이라 분류되었다고 하고, 학습 시킬때의 $\sigma$를 0.5로 두었다고 할 때, 
 논문의 공식에 대입하면 $p = 0.8, \sigma = 0.5 \to \sigma \cdot \phi^{-1}(p) \approx 0.5 \cdot 0.842 = 0.421$ 가 되어 
 이 0.421의 $L_2$ boundary안에서는 무조건 고양이로 분류됨을 보장할 수 있다. 
 
 이번에 다루는 논문인 이 Randomized smoothing 기법을 뚫는 아이디어에 대해 다루게 된다. 
+
+## Attack Idea
+본 논문의 핵심 아이디어는 모든 perturbation의 크기가 특정한 $L_2$ boundary로 국한될 수 있냐는 것이다. 애초에 인간의 눈에 잘 띄지 않으면서 이런 decision boundary로 부터 멀리 떨어져 있도록($R \ge r$) Adversarial example을 만들 수도 있기 때문이다. 
+
 
 
 # Reference
