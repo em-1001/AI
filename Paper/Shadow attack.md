@@ -8,7 +8,7 @@ Shadow attack의 특징은 다음과 같다.
 
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/7cdd8a2a-4b36-4412-bfc0-c58a70e0c305" height="80%" width="80%"></p>
 
-Strongly certified의 경우 adversarial examples을 방어기 위한 기법으로 certified defense가 있는데 이러한 방어 기법을 뚫는 기법이라고 할 수 있다. 
+Strongly certified의 경우 Adversarial examples을 방어기 위한 기법으로 certified defense가 있는데 이러한 방어 기법을 뚫는 기법이라고 할 수 있다. 
 즉 이 논문은 제목인 Breaking Certified Defenses Semantic Adversarial Examples with Spoofed Robustness Certificates에서도 알 수 있듯이 적대적 공격에 대한 방어 기법으로
 Robustness Certificates와 같은 기법들이 나왔는데 이런 방어 기법을 다시 뚫는 기법을 Shadow attack으로 제안하는 것이다. 
 
@@ -29,7 +29,7 @@ $$\underset{\theta}\min \underset{(x, y)\in X}E \left[\underset{\delta \in S}\ma
 Adversarial training은 뉴럴 네트워크를 학습시키는 과정에서 batch단위로 이미지 데이터를 먼저 Adversarial example로 만든 다음에 그 example을 다시 원래의 class로 분류할 수 있도록 학습시키는 방법이다. 
 
 위의 수식에서 $x, y$의 train data set이 있을 때, perturbation을 의미하는 $\delta$를 perturbation 제약 조건인 $S$범위 안에서 
-$x$에 더해 만들어진 adversarial examples가 loss값을 증가시키는 방향으로 만든 후 다시 원래의 class로 분류하도록 $\min$을 적용해 준다.
+$x$에 더해 만들어진 Adversarial examples가 loss값을 증가시키는 방향으로 만든 후 다시 원래의 class로 분류하도록 $\min$을 적용해 준다.
 
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/73cf486a-3666-4ee6-b3e8-04c0c2c60c2c" height="60%" width="60%"></p>
 
@@ -68,8 +68,34 @@ $$r = \sigma \cdot \phi^{-1}(p)$$
 
 이번에 다루는 논문인 이 Randomized smoothing 기법을 뚫는 아이디어에 대해 다루게 된다. 
 
-## Attack Idea
+## Shadow Attack for Randomized Smoothing
 본 논문의 핵심 아이디어는 모든 perturbation의 크기가 특정한 $L_2$ boundary로 국한될 수 있냐는 것이다. 애초에 인간의 눈에 잘 띄지 않으면서 이런 decision boundary로 부터 멀리 떨어져 있도록($R \ge r$) Adversarial example을 만들 수도 있기 때문이다. 
+이런 관점에서 보면 Certified Defense는 수학적으로는 의미가 있지만 실제 방어 기법으로는 여전히 부족함을 지적하는 논문이라 할 수 있다. 
+
+논문에서 제안하는 테크닉은 아래와 같다. 아래 식이 논문에서 제안하는 objective function이 된다. 
+
+$$\underset{\delta}\max L(\theta, x + \delta) - \lambda_c C(\delta) - \lambda_{tv} TV(\delta) - \lambda_s Dissim(\delta)$$
+
+#### Dissimilar
+총 4개의 항으로 구성되어 있는데 우선 가장 마지막 항인 Dissimilar항 부터 살펴볼 것이다. 이 부분은 쉽게 얼마나 같지 않은지를 평가하는 term이라고 볼 수 있다. 실제 용도는 최대한 같아지도록 만들기 위해 이런 Loss function을 사용한다. 그래서 $\lambda_s Dissim(\delta)$가 의미하는 바는 하나의 픽셀이 있을 때 그 픽셀의 각 RGB채널이 얼마나 다른가를 의미하고 RGB채널의 값들이 비슷하도록 만든다. 논문의 주제가 그림자 공격인 이유도 GrayScale(Shadow)과 유사한 형태로 perturbation을 넣으려하기 때문인 것이다. 실제 RGB표를 보면 알 수 있듯이 R, G, B 각각의 값이 서로 같으면 white, gray, black계열의 색들이다. 
+
+$$Dissim(\delta) = ||(\delta_R - \delta_G)^2, (\delta_R - \delta_B)^2, (\delta_G - \delta_B)^2||_2$$
+
+위 식을 보면 각 채널에 대해서 비슷한 perturbation이 들어가도록 만드는 것을 볼 수 있다. 
+
+```py
+def get_sim(t: torch.Tensor) -> torch.Tensor:
+	return ((t[0] - t[1]) ** 2 + (t[1] - t[2]) ** 2 + (t[0] - t[2]) ** 2).norm(p=2)
+```
+
+#### Smoothing
+이제 다음으로는 Smoothing하는 term인 $\lambda_{tv} TV(\delta)$이다. 이 부분에서는 만들어지는 perturbation이 더욱 자연스럽게 보이도록 total variation을 진행한다. total variation은 Smoothing기법의 일환으로 노이즈를 제거하기 위한 목적으로 자주 사용된다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/2212aa35-7cef-43fa-8728-a8887bb840c8"></p>
+
+Adversarial example도 사실은 일종의 노이즈라 볼 수 있기 때문에 원래 이러한 total variation은 방어 기법으로도 사용하는 논문도 있다. 다만 이 논문에서는 특이하게 Adversarial example에서의 perturbation을 더욱 자연스럽게 보이게하기 위한 용도로 사용하였다. 
+
+
 
 
 
