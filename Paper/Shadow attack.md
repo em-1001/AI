@@ -127,6 +127,7 @@ def get_color(t: torch.Tensor) -> torch.Tensor:
 # Reference
 ### Web links
 https://www.youtube.com/watch?v=D1j3QiXPRag&list=LL&index=7&t=1680s  
+https://github.com/ndb796/Deep-Learning-Paper-Review-and-Practice/blob/master/code_practices/Shadow_Attack_Tutorial.ipynb  
 
 ### Papers
 Randomized smoothing : https://arxiv.org/pdf/1902.02918.pdf  
