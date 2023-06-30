@@ -95,6 +95,31 @@ def get_sim(t: torch.Tensor) -> torch.Tensor:
 
 Adversarial example도 사실은 일종의 노이즈라 볼 수 있기 때문에 원래 이러한 total variation은 방어 기법으로도 사용하는 논문도 있다. 다만 이 논문에서는 특이하게 Adversarial example에서의 perturbation을 더욱 자연스럽게 보이게하기 위한 용도로 사용하였다. 
 
+$$Anisotropic \ \ TV(\delta) = \sum_k \sum_{i \ j}\left(\sqrt{(D_h\delta)_ {i \ j}^2} + \sqrt{(D_v\delta)_{i \ j}^2}\right)$$
+
+논문에서 사용하는 total variation은 Anisotropic TV로 이 값이 의미하는 바는 인접한 픽셀끼리의 차이이다. 
+
+```py
+def get_tv(t: torch.Tensor) -> torch.Tensor:
+	x_wise = t[:, :, 1:] - t[:, :, :-1]
+	y_wise = t[:, 1:, :] - t[:, :-1, :]
+	return (x_wise * x_wise).sum() + (y_wise * y_wise).sum()
+```
+
+위 코드는 바로 옆 픽셀들 간의 차이를 한번에 계산하도록 한 것이다. 
+이렇게 인접한 필셀들 간의 값을 유사하게 만들기 때문에 variation값이 감소하게 되는 것이다. 
+
+#### Color Regularizer
+다음은 Color Regularizer term인 $\lambda_c C(\delta)$이다. 이 부분은 perturbation의 크기 자체가 커지지 않도록 해주는 것이다. 이때 각 색상채널별로 평균값을 따로 구해서 그 평균값이 작아지도록 만든다. 
+앞선 TV에서는 각 색상채널별로 variation을 줄이기 때문에 엄밀히 말하면 perturbation의 크기와는 상관이 없다. 그렇기에 perturbation의 크기가 작아지도록 하는 term이 필요한 것이다.  
+
+$$C(\delta) = ||Avg(|\delta_R|), Avg(|\delta_G|), Avg(|\delta_B|)||_2^2$$
+
+```py
+def get_color(t: torch.Tensor) -> torch.Tensor:
+	return t.abs().mean([1, 2]).norm() ** 2
+```
+
 
 
 
