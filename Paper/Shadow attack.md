@@ -43,7 +43,7 @@ robust해 질 수는 있다. 다만 Adversarial example을 만드는 부분이 �
 그러므로 여전히 더 강력한 공격이 나온다면 그 공격에 의해서 모델이 뚫릴 수가 있다고 주장한다. 
 
 ### Certified Adversarial Robustness
-래서 Adversarial training의 이런 한계를 해결할 수 있는 수학적 모델로 Certified Adversarial Robustness가 제안되었다. 이는 입력 이미지가 주어졌을 때 특정한 크기의 $L_p - boundary$ 안에서 Adversarial example이 만들어질 수 없도록 수학적으로 보장하는(guaranteeing)방어 기법 유형이다. 
+그래서 Adversarial training의 이런 한계를 해결할 수 있는 수학적 모델로 Certified Adversarial Robustness가 제안되었다. 이는 입력 이미지가 주어졌을 때 특정한 크기의 $L_p - boundary$ 안에서 Adversarial example이 만들어질 수 없도록 수학적으로 보장하는(guaranteeing)방어 기법 유형이다. 
 
 #### Randomized smoothing
 이런 Certified Adversarial Robustness에서 가장 각광받는 방법이 Randomized smoothing이다. 
