@@ -29,7 +29,28 @@ $L_{\infty}$의 경우는 4/255, 8/255, 16/255.. 와 같은 값들로 주로 설
 
 
 ### Whilte Box & Black Box
-적대적공격에는 공격 유형을 Whilte Box 공격과 Black Box 공격으로 나눌 수 있는데 흔히 이를 Threat Model이라 한다. 이는 공격자가 어디까지 알고있는지를 기준으로 공격을 구분한 것인데, 먼저 Whilte Box 공격의 경우 말 그대로 공격자가 모델에 대해 완전히 알고 있는 경우를 말한다. 만약 공격자가 output layer까지만 접근할 수 있다고 하면 이를 Score-based threat model이라 한다. 또한 예측된 레이블 하나에 대해서만 접근이 가능한 경우는 Decision-based threat model이라 한다.  
+적대적공격에는 공격 유형을 Whilte Box 공격과 Black Box 공격으로 나눌 수 있는데 흔히 이를 Threat Model이라 한다. 이는 공격자가 어디까지 알고있는지를 기준으로 공격을 구분한 것인데, 먼저 Whilte Box 공격의 경우 말 그대로 공격자가 모델에 대해 완전히 알고 있는 경우를 말한다. 만약 공격자가 output layer까지만 접근할 수 있다고 하면 이를 Score-based threat model(output layer에서 classify 결과로 나온 각각의 class에 대한 확률값을 알 수 있는 경우)이라 한다. 또한 예측된 레이블 하나에 대해서만 접근이 가능한 경우(쉽게 말하면 결과로 나온 classify 확률들 중 가장 확률값이 높은 하나의 class에 대해서만 알려주는 경우)는 Decision-based threat model이라 한다.  
+
+#### Whilte Box Setting 
+Whilte Box 공격에서는 모델의 정보(네트워크 구조, 가중치 등)이 모두 공격자에게 드러난 경우다. 
+이런 경우엔 입력 값에 대한 gradient를 구할 수 있다. adversarial attack의 경우는 이미 학습이 되어있는 네트워크에서 입력값을 바꾸어 공격자가 의도한 결과를 내도록 하는 것이기 때문에 가중치 값은 그대로 둔 상태에서 입력값의 gradient를 구해고 gradient descent를 하여 loss함수를 최소화 하는 방식으로 공격하게 된다. 
+
+#### PGD Attack 
+Whilte Box 공격의 대표적인 예로 Projected Gradient Descent(PGD) Attack이 있다. 
+이때 PGD는 Gradient Descen를 수행함에 있어서 특정한 범위 제한이 있는 경우 범위 제한을 유지할 수 있도록 
+Projection을 시키는 방식으로 update를 하는 방법이다. 
+PGD Attack은 다음과 같은 방식으로 진행된다.  
+
+$$PGD \ Attack : x^{t+1} = \prod_{x+S} (x^t + \alpha * sign(\triangledown_x L(\theta, x, y)))$$
+
+$\theta$ : the parameters of a model   
+$x$ : the input to the model   
+$y$ : the targets associated with $x$    
+$J(\theta, x, y)$ : the cost used to train the neural network    
+Constraint of perturbation : $||\delta||_{\infty} = \max_i|\delta_i| \le \epsilon$
+
+이때 $L$(Loss)값은 일반적으로 cross entropy loss를 사용한다. 그러면 $\triangledown_x L(\theta, x, y)$는 특정한 모델의 cross entropy loss에 대해 $x$의 gradient를 구하게 된다. 그리고 이러한 loss를 증가시키는 방향으로 update를 시키게 된다. 그렇기 때문에 식에서도 $+$방향으로 update가 진행되는 것이다. 또한 식에 $sign$이 있는 이유는 PGD Attack이 $L_{\infty}$ Attack이기 때문이다. 즉 각각의 픽셀마다 $\alpha$만큼 update가 수행될 수 있도록 만드는 것이다. 다만 $L_{\infty}$ norm 상에서 크기를 입실론만큼 제한했다고 하면 입실론 범위 안에 들어와야 하기 때문에 매step마다 projection($\prod$)을 시켜서 입실론 범위안에 들어올 수 있도록 만드는 것이다.
+
 
 
 
