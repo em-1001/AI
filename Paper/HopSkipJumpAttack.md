@@ -51,12 +51,12 @@ Constraint of perturbation : $||\delta||_{\infty} = \max_i|\delta_i| \le \epsilo
 
 이때 $L$(Loss)값은 일반적으로 cross entropy loss를 사용한다. 그러면 $\triangledown_x L(\theta, x, y)$는 특정한 모델의 cross entropy loss에 대해 $x$의 gradient를 구하게 된다. 그리고 이러한 loss를 증가시키는 방향으로 update를 시키게 된다. 그렇기 때문에 식에서도 $+$방향으로 update가 진행되는 것이다. 또한 식에 $sign$이 있는 이유는 PGD Attack이 $L_{\infty}$ Attack이기 때문이다. 즉 각각의 픽셀마다 $\alpha$만큼 update가 수행될 수 있도록 만드는 것이다. 다만 $L_{\infty}$ norm 상에서 크기를 입실론만큼 제한했다고 하면 입실론 범위 안에 들어와야 하기 때문에 매step마다 projection($\prod$)을 시켜서 입실론 범위안에 들어올 수 있도록 만드는 것이다.
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/6378168e-1447-4dc7-8629-f990b363181d" height="35%" width="35%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/2d21aa97-7199-4a3d-988d-e5025bfdb607" height="35%" width="35%"></p>
 
 
-위 사진과 같이 2차원 상의 데이터 분류 모델이 있다고 가정하고 파란색 X의 Loss를 증가시키는 것이 목적이라고 하자. 현재 파란색 X는 class 0으로 분류가 되어 있다. $L_{\infty}$ Attack을 한다고 하면 각각의 축 마다 최대 
+위 사진과 같이 2차원 상의 데이터 분류 모델이 있다고 가정하고 주황색 X의 Loss를 증가시키는 것이 목적이라고 하자. 현재 주황색 X는 class 0으로 분류가 되어 있다. $L_{\infty}$ Attack을 한다고 하면 각각의 축 마다 최대 
 $\epsilon$크기만큼 바뀔 수 있기 때문에 위 사진과 같은 범위 안에 데이터가 존재할 수 있다. 
-이때 현재 파란색 X를 기준으로 cross entropy loss를 증가시키는 방향으로 각각의 축에 대해 $\alpha$만큼 이동한다고 하면 $x_1$축에 대해서는 오른쪽으로 가고 $x_2$축에 대해서는 아래쪽으로 갈 것이다. 이런 식으로 update를 진행하여 X가 class 1으로 분류되도록 만들게 된다. 
+이때 현재 주황색 X를 기준으로 cross entropy loss를 증가시키는 방향으로 각각의 축에 대해 $\alpha$만큼 이동한다고 하면 $x_1$축에 대해서는 오른쪽으로 가고 $x_2$축에 대해서는 아래쪽으로 갈 것이다. 이런 식으로 update를 진행하여 X가 class 1으로 분류되도록 만들게 된다. 
 
 ### Carlini-Wagner Attack
 Whilte Box 공격의 다른 예로 Carlini-Wagner Attack이 있다. CW Attack도 PGD와 마찬가지로 optimization문제를 해결하는데, 이때
@@ -115,7 +115,7 @@ Initialization : Boundary Attack을 수행할 때 처음에 adversarial한 상�
 #### Low-Frequency Boundary Attack (LF-BA)
 Boundary Attack의 성능을 향상시키기 위한 많은 방법이 제안되었는데 그 중 하나가 LF-BA이다. 
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/a74da116-6f48-4b16-afd7-55d2fc9b7185" height="45%" width="45%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/faa84978-2d35-4ac4-8544-e523b74545f0" height="45%" width="45%"></p>
 
 LF-BA는 기존 Boundary Attack에서 sampling하는 노이즈를 low-frequency데이터 형태로 바꿔주는 방식이다.
 즉 노이즈 $\eta$를 sampling하는 과정에서 high-frequency성분이 제외된 random noise $(IDCT_r(N(0,1)^{d \times d})$ 가 사용될 수 있도록 한 것이다. 이떄 정확히 이미지의 크기($d \times d$)만큼 노이즈 데이터를 sampling한 뒤에 거기에서 저주파 성분만 남도록 잘라내고 그 상태에서 다시 IDCT를 수행해서 저주파 노이즈가 sampling될 수 있도록 한다. 
@@ -129,4 +129,8 @@ LF-BA는 기존 Boundary Attack에서 sampling하는 노이즈를 low-frequency�
 https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28
 
 ## Papers
-HopSkipJumpAttack : https://arxiv.org/pdf/1904.02144.pdf  
+HopSkipJumpAttack : https://arxiv.org/pdf/1904.02144.pdf   
+PGD Attack : https://arxiv.org/pdf/1706.06083.pdf  
+Carlini-Wagner Attack : https://arxiv.org/pdf/1608.04644.pdf  
+Low Frequency Adversarial Perturbation : http://proceedings.mlr.press/v115/guo20a/guo20a.pdf  
+
