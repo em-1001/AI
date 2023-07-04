@@ -51,8 +51,7 @@ Constraint of perturbation : $||\delta||_{\infty} = \max_i|\delta_i| \le \epsilo
 
 이때 $L$(Loss)값은 일반적으로 cross entropy loss를 사용한다. 그러면 $\triangledown_x L(\theta, x, y)$는 특정한 모델의 cross entropy loss에 대해 $x$의 gradient를 구하게 된다. 그리고 이러한 loss를 증가시키는 방향으로 update를 시키게 된다. 그렇기 때문에 식에서도 $+$방향으로 update가 진행되는 것이다. 또한 식에 $sign$이 있는 이유는 PGD Attack이 $L_{\infty}$ Attack이기 때문이다. 즉 각각의 픽셀마다 $\alpha$만큼 update가 수행될 수 있도록 만드는 것이다. 다만 $L_{\infty}$ norm 상에서 크기를 입실론만큼 제한했다고 하면 입실론 범위 안에 들어와야 하기 때문에 매step마다 projection($\prod$)을 시켜서 입실론 범위안에 들어올 수 있도록 만드는 것이다.
 
-
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/44331665-f1a9-482b-adac-c801cc7073aa" height="35%" width="35%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/6378168e-1447-4dc7-8629-f990b363181d" height="35%" width="35%"></p>
 
 
 위 사진과 같이 2차원 상의 데이터 분류 모델이 있다고 가정하고 파란색 X의 Loss를 증가시키는 것이 목적이라고 하자. 현재 파란색 X는 class 0으로 분류가 되어 있다. $L_{\infty}$ Attack을 한다고 하면 각각의 축 마다 최대 
