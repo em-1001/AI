@@ -51,7 +51,7 @@ Constraint of perturbation : $||\delta||_{\infty} = \max_i|\delta_i| \le \epsilo
 
 이때 $L$(Loss)값은 일반적으로 cross entropy loss를 사용한다. 그러면 $\triangledown_x L(\theta, x, y)$는 특정한 모델의 cross entropy loss에 대해 $x$의 gradient를 구하게 된다. 그리고 이러한 loss를 증가시키는 방향으로 update를 시키게 된다. 그렇기 때문에 식에서도 $+$방향으로 update가 진행되는 것이다. 또한 식에 $sign$이 있는 이유는 PGD Attack이 $L_{\infty}$ Attack이기 때문이다. 즉 각각의 픽셀마다 $\alpha$만큼 update가 수행될 수 있도록 만드는 것이다. 다만 $L_{\infty}$ norm 상에서 크기를 입실론만큼 제한했다고 하면 입실론 범위 안에 들어와야 하기 때문에 매step마다 projection($\prod$)을 시켜서 입실론 범위안에 들어올 수 있도록 만드는 것이다.
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/f7163c11-135b-492a-b160-1eeabe57755c" height="40%" width="40%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/f7163c11-135b-492a-b160-1eeabe57755c" height="35%" width="35%"></p>
 
 
 위 사진과 같이 2차원 상의 데이터 분류 모델이 있다고 가정하고 주황색 X의 Loss를 증가시키는 것이 목적이라고 하자. 현재 주황색 X는 class 0으로 분류가 되어 있다. $L_{\infty}$ Attack을 한다고 하면 각각의 축 마다 최대 
@@ -59,6 +59,49 @@ $\epsilon$크기만큼 바뀔 수 있기 때문에 위 사진과 같은 범위 �
 이때 현재 주황색 X를 기준으로 cross entropy loss를 증가시키는 방향으로 각각의 축에 대해 $\alpha$만큼 이동한다고 하면 $x_1$축에 대해서는 오른쪽으로 가고 $x_2$축에 대해서는 아래쪽으로 갈 것이다. 이런 식으로 update를 진행하여 X가 class 1으로 분류되도록 만들게 된다. 
 
 #### Carlini-Wagner Attack
+Whilte Box 공격의 다른 예로 Carlini-Wagner Attack이 있다. CW Attack도 PGD와 마찬가지로 optimization문제를 해결하는데, 이때
+misclassification loss를 추가해줘서 공격을 수행한다. 공격에 사용되는 목적 함수(objective function)은 다음과 같다. 
+
+$$minimize \ \ D(x, x+\delta) + c \cdot f(x + \delta)$$
+
+$$such \ that \ \  x + \delta \in [0, 1]^n$$
+
+여기서 $D$는 원본 이미지 $x$와 Adversarial example $x + \delta$의 거리가 가까워 지도록 하여 눈에 띄지 않도록 하고, $c \cdot f(x + \delta)$는 공격 수행을 위한 loss이다. 또한 이러한 distance loss $D$와 공격 loss $f$중 어떤 것이 더 중요한지 가중치를 정하기 위해 하이퍼 파라미터로 $c$가 존재한다. 그리고 Adversarial example $x + \delta$는 항상 0부터 1사이로 정규화된 값의 범위 안에 들어갈 수 있도록 한다. 예를 들어 픽셀의 값이 0 ~ 255라고 하면 그 값이 0 ~ 1사이로 정규화를 진행한다. 
+
+$L_2$에서 CW Attack은 다음과 같은 목적함수로 구성된다. 
+
+$$minimize \ \ ||\frac{1}{2}(tanh(w) + 1) - x||_2^2 + c \cdot f(\frac{1}{2}(tanh(w) + 1))$$
+
+$$f(x') = \max(\max \left\lbrace Z(x')_i : i \neq t \right\rbrace - Z(x')_t, -k)$$
+
+$w$는 update를 하기 위한 Adversarial example인데, 여기에 $tanh$를 취하고 + 1을 더한 뒤 $\frac{1}{2}$을 곱하면 항상 0~1사이의 값을 취하게 된다. 그렇게 만들어진 Adversarial example을 원본 이미지 $x$와 유사함 값을 갖도록 만들면서 동시에 공격자가 원하는 class로 분류되도록 하기 위해서 $f(\frac{1}{2}(tanh(w) + 1))$를 적용한다. 
+이때 $f$는 구체적으로 2번째 수식으로 정의할 수 있는데, $Z$는 로짓값으로 CW Attack의 특징은 최종적으로 나온 확률값을 이용하는 것이 아니라 로짓값을 이용한 차이값을 구한다는 것이 특징이다. 또한 $k$는 얼마나 강력한 perturbation을 넣을 것인지를 결정하는 하이퍼 파라미터이다.  
+
+cw attack은 별도의 projection과 같은 테크닉을 이용해서 perturbation의 크기를 제한하지는 않고 $\delta$값이 애초에 작아질 수 있도록 설정한 뒤에 gradient descent를 이용해서 $w$를 update하는 방식으로 공격을 수행한다.
+
+
+#### Black Box Setting 
+Black Box 공격은 공격자가 모델의 내부 파라미터에 대해 모르는 경우를 말하는데 이 중에서도 Decision-based(Hard-label) attack은 가장 확률값이 높은 하나의 class에 대해서만 관찰할 수 있는 경우이다. 이런 상황에서 공격자는 입력 $x$에 대해서 역전파를 하여 gradient를 구할 수 없기 때문에 gradient를 예측하거나 하는 방식으로 공격을 수행한다. 
+
+
+#### Transfer-based Black-box Attack 
+Black Box 공격 중 가장 대표적인 것으로 Transfer-based Black-box Attack이 있다. Adversarial example은 모델 사이에서 전송 가능한(transferable) 특징이 있는데 이러한 transferability를 이용한 공격 방법은 다음과 같다. 
+
+1. 공격자가 개인적으로 공격 대상 모델(black-box)와 유사한 대체 모델(substitute model)을 학습한다.
+2. 자신의 대체 모델에 대하여 white-box 공격을 수행해 adversarial example을 생성한다.
+3. 해당 adversarial example을 공격 대상인 black-box 모델에 넣어 최종적으로 공격을 수행한다.
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/d4e5cac8-cb72-4eda-9af8-cbe874f07d2d" height="70%" width="70%"></p>
+
+이러한 Transfer-based Attack이 가능한 이유는 유사한 학습 데이터 세트로 학습한 모델은 유사한 decision boundary를 가지기 때문으로 추측된다. 그래서 이러한 transferability를 잘 활용한 공격 기법은 추가적인 쿼리(query)를 줘서 black-box 모델과 더욱 유사한 surrogate 모델을 만들어 공격하는 것이다. 
+
+또한 transferability가 왜 존재하는가에 대해서 다른 관점의 분석은 Adversarial perturbation을 non-robust feature로 이해할 수 있으며 하나의 데이터 셋은 robust feature와 non-robust feature로 구성된다는 것이다. 이때 유사한 학습 데이터 셋들로 학습을 진행한 다양한 모델들은 generalized non-robust feature를 학습하기 때문에 transferability가 존재할 수 있다는 것이다. 이때 non-robust feature는 작은 크기의 노이즈를 섞었을 때 쉽게 변경될 수 있는 feature를 말하는데 쉽게 변경될 수 있지만 이 또한 일반화가 잘 되어있기 때문에 실제로 모델의 성능을 올리기에 유의미한 역할을 수행할 수 있다는 것이다. 
+
+이러한 Transfer-based Attack에 대한 대표적인 방어기법은 ICLR에 발표된 Ensemble adversarial training을 통해 막을 수 있는데, 이는 특정한 모델을 학습할 때 Adversarial example을 만들고 그것들을 다시 학습 데이터로 활용하여 Ensemble 기법으로 높은 방어율을 보일 수 있다.   
+
+
+#### Decision-based Attack 
+Black-box Attack의 또 다른 갈래로는 Decision-based Attack이 있다. 
 
 
 
