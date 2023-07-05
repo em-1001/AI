@@ -149,5 +149,5 @@ https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1
 HopSkipJumpAttack : https://arxiv.org/pdf/1904.02144.pdf   
 PGD Attack : https://arxiv.org/pdf/1706.06083.pdf  
 Carlini-Wagner Attack : https://arxiv.org/pdf/1608.04644.pdf  
-Low Frequency Adversarial Perturbation : http://proceedings.mlr.press/v115/guo20a/guo20a.pdf  
-
+Low Frequency Adversarial Perturbation : http://proceedings.mlr.press/v115/guo20a/guo20a.pdf    
+Opt Attack : https://arxiv.org/pdf/1909.10773.pdf  
