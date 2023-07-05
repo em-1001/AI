@@ -123,6 +123,23 @@ LF-BA는 기존 Boundary Attack에서 sampling하는 노이즈를 low-frequency�
 이렇게 만들어진 저주파 노이즈가 섞인 위치에서 안쪽으로 파고들 수 있도록 한다. 이렇게 한 결과 안쪽으로 파고드는 step이 훨씬 더 자주 성공할 수 있었고 결과적으로 original image에 더 빠르게 근접할 수 있었고 이렇게 쿼리 효율성이 증가하였다. 
 
 
+#### Opt Attack 
+Opt Attack은 Boundary Attack보다 좀 더 효율적이라고 알려져있다. Opt Attack은 기존 hard-label black-box attack을 reformulating해서 최적화 문제의 형태를 조금 바꾸었고 이렇게 조금 쉬운 형태로 바꾸고 최적화를 진행한 결과 좀 더 좋은 결과가 나왔다고 한다. 
+
+함수 $g(\theta)$를 새롭게 제안하는데 인자로 받는 $\theta$는 방향성을 알려주는 벡터이다. 
+$g(\theta)$는 특정 $\theta$ 방향으로 이동했을 때 가장 가까이에 있는 adversarial example의 거리를 의미한다. 
+Opt Attack을 제안한 논문에서는 이 $g$값을 최소화하는 $\theta$를 찾는 문제로 기존의 Decision-based Attack의 문제를 변형하였다. 
+
+$$
+\theta^* = arg \underset{\theta}\min g(\theta) 　\ where \ g(\theta) = arg \underset{\lambda > 0}\min(f(x_0 + \lambda \frac{\theta}{||\theta||}) \neq y_0)
+$$
+
+식을 보면 $\frac{\theta}{||\theta||}$로 $\theta$를 norm값으로 나누어서 단위 방향 벡터로 만들어주고 해당 방향으로 이동했을 때 원본 class($y_0$)가 아닌 다른 class가 나오는 최소한의 거리 $\lambda$를 찾고 그 거리값이 함수 $g$의 값이 될 수 있도록 하고 그러한 함수 $g$의 값이 최소화 되도록 하는 $\theta$를 찾는 문제가 된다. 
+
+즉, 어떤 방향으로 이동했을 때 가장 짧은 거리로 적대적 예제를 만들 수 있는지를 찾는 것이다. 
+이러한 Opt Attack은 원래 문제를 직접적으로 해결하기 보다는 더 해결하기 쉬운 문제로 변형하여 최적화 문제를 해결한다. 
+다만 이후에 나올 HopSkipJumpAttack은 문제를 직접적으로 해결한다. 
+
 
 # Reference
 ## Web Links
