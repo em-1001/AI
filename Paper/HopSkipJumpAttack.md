@@ -184,7 +184,7 @@ $$\epsilon_t = \min \epsilon^{'} 　 s.t. \ rank \ \left(y_{adv} | \prod_{\epsil
 
 2. 입실론 범위를 유지하면서 target class의 확률값을 최대로 높인다.
 
-$$x^{(t)} = arg \underset{x{'}}\max P(y_{adv} | \prod_{\epsilon - 1} (x^{'}))$$
+$$x^{(t)} = arg \underset{x{'}}\max P(y_{adv} | \prod_{\epsilon_{t - 1}} (x^{'}))$$
 
 이 과정을 거치는 이유는 입실론 범위를 유지하는 perturbation중에서 target class에 대한 확률값을 최대한으로 높여줘야 다시 1번 단계로 돌아갔을 때 입실론을 더욱더 작게 만들 수 있기 때문이다. 이렇게 1번과 2번 과정을 반복적으로 수행하여 최적화 한다. 
 
