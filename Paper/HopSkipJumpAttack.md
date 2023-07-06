@@ -130,7 +130,7 @@ $g(\theta)$는 특정 $\theta$ 방향으로 이동했을 때 가장 가까이에
 Opt Attack을 제안한 논문에서는 이 $g$값을 최소화하는 $\theta$를 찾는 문제로 기존의 Decision-based Attack의 문제를 변형하였다. 
 
 $$
-\theta^* = arg \underset{\theta}\min g(\theta) 　\ where \ g(\theta) = arg \underset{\lambda > 0}\min(f(x_0 + \lambda \frac{\theta}{||\theta||}) \neq y_0)
+\theta^* = arg \underset{\theta}\min g(\theta) 　\ where 　 g(\theta) = arg \underset{\lambda > 0}\min(f(x_0 + \lambda \frac{\theta}{||\theta||}) \neq y_0)
 $$
 
 식을 보면 $\frac{\theta}{||\theta||}$로 $\theta$를 norm값으로 나누어서 단위 방향 벡터로 만들어주고 해당 방향으로 이동했을 때 원본 class($y_0$)가 아닌 다른 class가 나오는 최소한의 거리 $\lambda$를 찾고 그 거리값이 함수 $g$의 값이 될 수 있도록 하고 그러한 함수 $g$의 값이 최소화 되도록 하는 $\theta$를 찾는 문제가 된다. 
