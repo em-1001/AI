@@ -1,6 +1,5 @@
-# HopSkipJumpAttack
-## Background
-### p - norm
+# Background
+## p - norm
 원래의 이미지에 perturbation을 넣어서 Adversarial example을 만들게 되는데 이러한 perturbation의 크기에 대한 지표로 p-norm이 쓰인다. 
 p-norm은 특정한 벡터의 크기를 판단하는 기준으로 사용할 수 있다. 
 이러한 p-norm을 통해서 perturbation의 크기를 제한할 수 있다. 
@@ -28,14 +27,14 @@ $$
 $L_{\infty}$의 경우는 4/255, 8/255, 16/255.. 와 같은 값들로 주로 설정한다. 
 
 
-### Whilte Box & Black Box
+## Whilte Box & Black Box
 적대적공격에는 공격 유형을 Whilte Box 공격과 Black Box 공격으로 나눌 수 있는데 흔히 이를 Threat Model이라 한다. 이는 공격자가 어디까지 알고있는지를 기준으로 공격을 구분한 것인데, 먼저 Whilte Box 공격의 경우 말 그대로 공격자가 모델에 대해 완전히 알고 있는 경우를 말한다. 만약 공격자가 output layer까지만 접근할 수 있다고 하면 이를 Score-based threat model(output layer에서 classify 결과로 나온 각각의 class에 대한 확률값을 알 수 있는 경우)이라 한다. 또한 예측된 레이블 하나에 대해서만 접근이 가능한 경우(쉽게 말하면 결과로 나온 classify 확률들 중 가장 확률값이 높은 하나의 class에 대해서만 알려주는 경우)는 Decision-based threat model이라 한다.  
 
-### Whilte Box Setting 
+## Whilte Box Setting 
 Whilte Box 공격에서는 모델의 정보(네트워크 구조, 가중치 등)이 모두 공격자에게 드러난 경우다. 
 이런 경우엔 입력 값에 대한 gradient를 구할 수 있다. adversarial attack의 경우는 이미 학습이 되어있는 네트워크에서 입력값을 바꾸어 공격자가 의도한 결과를 내도록 하는 것이기 때문에 가중치 값은 그대로 둔 상태에서 입력값의 gradient를 구해고 gradient descent를 하여 loss함수를 최소화 하는 방식으로 공격하게 된다. 
 
-### PGD Attack 
+## PGD Attack 
 Whilte Box 공격의 대표적인 예로 Projected Gradient Descent(PGD) Attack이 있다. 
 이때 PGD는 Gradient Descen를 수행함에 있어서 특정한 범위 제한이 있는 경우 범위 제한을 유지할 수 있도록 
 Projection을 시키는 방식으로 update를 하는 방법이다. 
@@ -80,11 +79,11 @@ $w$는 update를 하기 위한 Adversarial example인데, 여기에 $tanh$를 �
 cw attack은 별도의 projection과 같은 테크닉을 이용해서 perturbation의 크기를 제한하지는 않고 $\delta$값이 애초에 작아질 수 있도록 설정한 뒤에 gradient descent를 이용해서 $w$를 update하는 방식으로 공격을 수행한다.
 
 
-### Black Box Setting 
+## Black Box Setting 
 Black Box 공격은 공격자가 모델의 내부 파라미터에 대해 모르는 경우를 말하는데 이 중에서도 Decision-based(Hard-label) attack은 가장 확률값이 높은 하나의 class에 대해서만 관찰할 수 있는 경우이다. 이런 상황에서 공격자는 입력 $x$에 대해서 역전파를 하여 gradient를 구할 수 없기 때문에 gradient를 예측하거나 하는 방식으로 공격을 수행한다. 
 
 
-### Transfer-based Black-box Attack 
+## Transfer-based Black-box Attack 
 Black Box 공격 중 가장 대표적인 것으로 Transfer-based Black-box Attack이 있다. Adversarial example은 모델 사이에서 전송 가능한(transferable) 특징이 있는데 이러한 transferability를 이용한 공격 방법은 다음과 같다. 
 
 1. 공격자가 개인적으로 공격 대상 모델(black-box)와 유사한 대체 모델(substitute model)을 학습한다.
@@ -98,8 +97,8 @@ Black Box 공격 중 가장 대표적인 것으로 Transfer-based Black-box Atta
 이러한 Transfer-based Attack에 대한 대표적인 방어기법은 ICLR에 발표된 Ensemble adversarial training을 통해 막을 수 있는데, 이는 특정한 모델을 학습할 때 Adversarial example을 만들고 그것들을 다시 학습 데이터로 활용하여 Ensemble 기법으로 높은 방어율을 보일 수 있다.   
 
 
-### Decision-based Attack
-#### Boundary Attack 
+## Decision-based Attack
+### Boundary Attack 
 Decision-based Attack의 초기 공격 기법으로는 Boundary Attack이 있다. Boundary Attack은 다음과 같은 방식으로 동작한다. 
 
 Initialization : Boundary Attack을 수행할 때 처음에 adversarial한 상태에서 시작한다. 즉 고양이를 강아지로 분류하게 만들려고 한다면 처음부터 강아지로 분류되는 이미지를 준비하는 것이다. 그렇게 해서 adversarial한 상태는 유지하면서 강아지에서 시작해서 고양이 가까워지도록 하는 것이다. 방법은 아래와 같다. 
@@ -112,7 +111,7 @@ Initialization : Boundary Attack을 수행할 때 처음에 adversarial한 상�
 
 랜덤한 노이즈를 섞어서 original image에 가까워질 수 있도록 만들고 이때 original쪽으로 파고들어갈 수 있으면 가고 아니면 해당 방향으로는 이동하지 않는 방식이다. 이러한 과정을 rejection sampling이라 부를 수 있는데 이는 proposal distribution에서 많은 횟수로 sampling 해보고 그 decision 결과에 따라서 accept / reject을 결정하는 방식을 이용하는 것이다. 이는 나중에 나올 HopSkipJumpAttack에 비해 수렴성 보장의 근거가 부족하다는 단점이 존재한다. 
 
-#### Low-Frequency Boundary Attack (LF-BA)
+### Low-Frequency Boundary Attack (LF-BA)
 Boundary Attack의 성능을 향상시키기 위한 많은 방법이 제안되었는데 그 중 하나가 LF-BA이다. 
 
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/faa84978-2d35-4ac4-8544-e523b74545f0" height="45%" width="45%"></p>
@@ -123,7 +122,7 @@ LF-BA는 기존 Boundary Attack에서 sampling하는 노이즈를 low-frequency�
 이렇게 만들어진 저주파 노이즈가 섞인 위치에서 안쪽으로 파고들 수 있도록 한다. 이렇게 한 결과 안쪽으로 파고드는 step이 훨씬 더 자주 성공할 수 있었고 결과적으로 original image에 더 빠르게 근접할 수 있었고 이렇게 쿼리 효율성이 증가하였다. 
 
 
-#### Opt Attack 
+### Opt Attack 
 Opt Attack은 Boundary Attack보다 좀 더 효율적이라고 알려져있다. Opt Attack은 기존 hard-label black-box attack을 reformulating해서 최적화 문제의 형태를 조금 바꾸었고 이렇게 조금 쉬운 형태로 바꾸고 최적화를 진행한 결과 좀 더 좋은 결과가 나왔다고 한다. 
 
 함수 $g(\theta)$를 새롭게 제안하는데 인자로 받는 $\theta$는 방향성을 알려주는 벡터이다. 
@@ -141,6 +140,48 @@ $$
 다만 이후에 나올 HopSkipJumpAttack은 문제를 직접적으로 해결한다. 
 
 
+### Limited Attack 
+Limited Attack은 다음과 같은 상황에서 적용 가능한 공격 메서드를 제안한다. 
+1. Query-limited setting : 공격자가 오직 한정된 개수의 쿼리(query)만 날릴 수 있다.
+2. Partial-information setting : top-k개의 클래스에 대한 확률(probability)을 알 수 있다.
+3. Label-only setting : top-k개의 클래스에 대한 레이블(label)정보만을 알 수 있다.
+
+일반적으로 Label-only setting은 top-1개의 클래스 이름만을 알려주는 경우가 많고 그렇기 때문에 매우 현실적이고 어려운 문제 상황이다. 
+Decision-based setting, Hard-label setting과 같은 의미로 사용되는 경우가 많다. 
+
+Limited Attack은 블랙박스 공격 상황에서 기울기(gradient)를 예측하는 방법을 사용한다. 
+Limited Attack을 제안한 논문에서는 $L_{\infty}$ 거리로 제한된 공격상황에서 사용 가능한 메서드를 제안했다. 
+우선 기울기를 예측하기 위해서는 아래의 NES Gradient Estimate를 사용한다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/46d3ae16-f2ed-4e19-8dab-10e4d979a590" height="45%" width="45%"></p>
+
+위 알고리즘에서는 gradient를 예측하기 위해 n번 만큼의 반복을 하는데 반복문에서 매번 gaussian distribution에서 노이즈를 샘플링하고 그러한 노이즈에 델타만큼 곱한 값을 이미지 $x$에 대해 더해주고 그렇게 노이즈가 섞인 이미지에 대해 classifier $P$로 확률값을 구해준다.
+이때 해당 노이즈가 확률값을 바꾸는데에 있어서 얼마나 많은 영향을 미쳤는지를 가중치에 따라 구해줄 필요가 있기 때문에 해당 값에 노이즈 값을 곱해준다. 이렇게 얻어진 값 $P(y|x + \sigma \cdot u_i) \cdot u_i$는 gradient의 추정치로 사용할 수 있게 된다. 
+마찬가지로 해당 노이즈를 빼준다음에도 동일하게 확률값을 구해서 gradient 추정치를 구해주고 이러한 과정을 반복한다. 
+당연히 이러한 과정을 많이 반복할수록 더 정확한 gradient값을 예측할 수 있다. 
+물론 실제 공격상황에서는 노이즈를 샘플링할 때마다 매번 쿼리를 날려줘야 하기 때문에 $n$값을 무작적 키우는 것은 불가능하다. 
+최종적으로 이렇게 예측된 gradient를 통해서 PGD Attack을 수행할 수 있다. 
+
+이러한 Partial-information setting에서의 공격에 대한 아이디어는 다음과 같다. 
+1. 적대적인 상태를 유지하면서 입실론의 최소 크기를 찾는다. 
+
+$$\epsilon_t = \min \epsilon^{'} 　 s.t. 　 rank 　 \left(y_{adv} | \prod_{\epsilon^{'}} (x^{(t-1)})\right) < k$$
+
+현재 단계의 적대적 예제($x^{(t-1)}$)가 있다고 했을 때 이를 입실론 범위 안으로 projection($\prod_{\epsilon^{'}}$)시켜서 작은 크기의 perturbation을 갖는 적대적 예제가 만들어질 수 있도록 한다. 이때 이러한 적대적 예제에 대해서 class 정보를 구하고 만약 targeted attack이라고 하면 목표로하는 target class가 상위 $k$개의 class 안에 들어가 있다면 공격 성공으로 보고 그러한 공격 성공을 유지한 상태에서 최대한 작은 입실론을 찾도록 만든다. 
+
+2. 입실론 범위를 유지하면서 target class의 확률값을 최대로 높인다.
+
+$$x^{(t)} = arg \underset{x{'}}\max P(y_{adv} | \prod_{\epsilon - 1} (x^{'}))$$
+
+이 과정을 거치는 이유는 입실론 범위를 유지하는 perturbation중에서 target class에 대한 확률값을 최대한으로 높여줘야 다시 1번 단계로 돌아갔을 때 입실론을 더욱더 작게 만들 수 있기 때문이다. 이렇게 1번과 2번 과정을 반복적으로 수행하여 최적화 한다. 
+
+결과적으로 이렇게 입실론 범위가 줄어들어야 더욱 눈에 띄지 않고 강력한 적대적 예제를 만들 수 있는 것이다. 
+다만 이때 2번에서 확률값을 높이는 적대적 예제를 찾기 위해서는 PGD Attack을 수행할 수 있는데 PGD Attack을 수행하려면 적대적 예제의 gradient를 구해야 하는데 이러한 gradient를 직접적으로 구할 수 없기 때문에 아까 설명한 Gradient Estimate 알고리즘을 사용해서 기울기를 예측하는 것이다. 
+
+
+# HopSkipJumpAttack
+
+
 # Reference
 ## Web Links
 https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28
@@ -150,4 +191,5 @@ HopSkipJumpAttack : https://arxiv.org/pdf/1904.02144.pdf
 PGD Attack : https://arxiv.org/pdf/1706.06083.pdf  
 Carlini-Wagner Attack : https://arxiv.org/pdf/1608.04644.pdf  
 Low Frequency Adversarial Perturbation : http://proceedings.mlr.press/v115/guo20a/guo20a.pdf    
-Opt Attack : https://arxiv.org/pdf/1909.10773.pdf  
+Opt Attack : https://arxiv.org/pdf/1909.10773.pdf    
+Limited Attack  : https://arxiv.org/pdf/1804.08598.pdf  
