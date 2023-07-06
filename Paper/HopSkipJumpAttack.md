@@ -178,7 +178,7 @@ $\quad\quad g ← g - P(y|x - \sigma \cdot u_i) \cdot u_i$
 이러한 Partial-information setting에서의 공격에 대한 아이디어는 다음과 같다. 
 1. 적대적인 상태를 유지하면서 입실론의 최소 크기를 찾는다. 
 
-$$\epsilon_t = \min \epsilon^{'} 　 s.t. \ rank 　 \left(y_{adv} | \prod_{\epsilon^{'}} (x^{(t-1)})\right) < k$$
+$$\epsilon_t = \min \epsilon^{'} 　 s.t. \ rank \ \left(y_{adv} | \prod_{\epsilon^{'}} (x^{(t-1)})\right) < k$$
 
 현재 단계의 적대적 예제($x^{(t-1)}$)가 있다고 했을 때 이를 입실론 범위 안으로 projection($\prod_{\epsilon^{'}}$)시켜서 작은 크기의 perturbation을 갖는 적대적 예제가 만들어질 수 있도록 한다. 이때 이러한 적대적 예제에 대해서 class 정보를 구하고 만약 targeted attack이라고 하면 목표로 하는 target class가 상위 $k$개의 class 안에 들어가 있다면 공격 성공으로 보고 그러한 공격 성공을 유지한 상태에서 최대한 작은 입실론을 찾도록 만든다. 
 
