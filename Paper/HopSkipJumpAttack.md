@@ -114,7 +114,7 @@ Initialization : Boundary Attack을 수행할 때 처음에 adversarial한 상�
 ### Low-Frequency Boundary Attack (LF-BA)
 Boundary Attack의 성능을 향상시키기 위한 많은 방법이 제안되었는데 그 중 하나가 LF-BA이다. 
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/faa84978-2d35-4ac4-8544-e523b74545f0" height="45%" width="45%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/da8fd154-3b7e-4315-9e28-3b958e358f59" height="45%" width="45%"></p>
 
 LF-BA는 기존 Boundary Attack에서 sampling하는 노이즈를 low-frequency데이터 형태로 바꿔주는 방식이다.
 즉 노이즈 $\eta$를 sampling하는 과정에서 high-frequency성분이 제외된 random noise $(IDCT_r(N(0,1)^{d \times d})$ 가 사용될 수 있도록 한 것이다. 이떄 정확히 이미지의 크기($d \times d$)만큼 노이즈 데이터를 sampling한 뒤에 거기에서 저주파 성분만 남도록 잘라내고 그 상태에서 다시 IDCT를 수행해서 저주파 노이즈가 sampling될 수 있도록 한다. 
@@ -219,24 +219,86 @@ HopSkipJumpAttack은 이전까지의 다른 매서드와 비교할 때 상당히
 앞서 언급한 query-efficient가 중요한 이유는 black-box에서의 가장 큰 어려움이 모델에 많은 쿼리를 날려야 한다는 점이다. 즉 쿼리 수가 매우 많이 요구되기 때문에 비용이 큰 것인데, 이전까지 제안된 공격기법들은 상대적으로 많은양의 쿼리가 요구되었다. 추가적으로 다양한 Decision-based Attack은 쿼리를 많이 날리되 매번 날리는 쿼리마다 그 이미지의 차이가 크지 않고 유사한 이미지를 여러번 날리기 때문에 deep learning 운영자의 입장에서는 비슷한 쿼리가 계속 날라오면 이를 일종의 공격으로서 받아들일 수도 있다. 이러한 측면에서 보았을 때도 query의 수가 적을수록 더 유리한 공격이다. 
 
 
-#### General Notations : White-box 
+### White-box Notations 
 우선 White-box상황일 때를 가정한다고 하면 아래와 같이 각각의 수학적 용어를 정의할 수 있다. 
 
 Label set(m개의 class) : $[m] = \left\lbrace1, ...., m\right\rbrace$  
 Output vector(각각의 class에 대한 결과값) : $y = (F_1(x), ..., F_m(x))$  
 The classifier : $C(x) := arg \underset{c \in [m]}\max F_c(x)$  
 
-The objective of the attacker:
-$$x$$
+The objective of the attacker:  
+
+$$
+S_{x^{\star}}(x^{'}) :=
+\begin{cases}  
+\underset{c \neq c^{\star}}\max F_c(x^{'}) - F_{c^{\star}}(x^{'}) & (Untargeted) \\
+F_{c^{†}}(x^{'}) - \underset{c \neq c^{†}} \max F_c(x^{'}) & (Targeted)
+\end{cases}
+$$
+
+Adversarial example : $x^{'}$　　Target class : $c^{†}$　　Original class : $c^{\star}$
+
+공격자의 objective function은 CW loss와 유사한 형태로 Untargeted의 경우 original class에 대해서는 그 출력값( $F_{c^{\star}}(x^{'})$ )을 감소시키고 original class가 아닌 다른 class 중에서 가장 높은 classify결과를 갖는 class에 대해서는 그 출력값( $\underset{c \neq c^{\star}}\max F_c(x^{'})$ )을 높이는 방향으로 공격을 수행한다. 
+Targeted의 경우는 의도했던 Target class에 대해서는 출력값( $F_{c^{†}}(x^{'})$ )을 높이고 Target class가 아닌 다른 class중에서 가장 높은 값을 갖는 class는 출력값( $\underset{c \neq c^{†}} \max F_c(x^{'})$ )을 낮추는 방향으로 공격한다. 
+실제 공격자는 이러한 방식으로 최종적인 $S_{x^{\star}}(x^{'})$ 값이 커지도록 공격을 수행한다. 
+
+위와 같은 공격은 공격자가 Output vector인 함수 $F$에 접근할 수 있다는 가정이 필요해서 White-box상황인 경우 위와 같은 공격이 가능하다. 
 
 
+### Decision-based Attack Notations
+The decision of whether the attack is a success for not:  
+
+$$
+\phi_{x^{\star}}(x^{'}) := sign(S_{x^{\star}}(x^{'})) = 
+\begin{cases} 
+1 & \mbox{if } S_{x^{\star}}(x^{'}) > 0 \\  
+-1 & \mbox{otherwise }
+\end{cases}
+$$
+
+앞서 확인했듯이 $S_{x^{\star}}(x^{'})$의 값이 0보다 크면 공격성공으로 보고 $S_{x^{\star}}(x^{'})$에 대해서 부호값만 취한 것이 $\phi_{x^{\star}}(x^{'})$가 된다. 
+그래서 실제 Decision-based Attack상황에서 공격자가 알 수 있는 정보는 class정보가 바뀌었는지, 바뀌지 않았는지 둘 중 하나이기 때문에 이러한 $\phi$함수에 대해서만 접근이 가능한 것이라고 이해할 수 있다.
+즉 공격 성공 여부를 $\phi$함수로 알 수 있다. 
+
+The objective of the attacker in a decision-based attack:
+
+$$\underset{x^{'}}\min d(x^{'}, x^{\star})　such \ that　\phi_{x^{\star}}(x^{'}) = 1$$
+
+실제 Decision-based Attack의 objective function은 위와 같다. 
+$\phi_{x^{\star}}(x^{'}) = 1$인 상태를 유지하면서 최대한 Original image와 가까운 Adversarial example을 찾도록 만든다. 
+
+이때 distance metric인 $d$는 $L_p$-nroms을 통해 정의할 수 있다. 
+
+### An Iterative Algorithm for $L_2$ Distance 
+$L_2$ Distance에서의 공격 알고리즘을 하나의 식으로 정리하면 다음과 같다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/5b12f039-a24c-4159-9e81-7a1f9b78aa1e" height="15%" width="15%"></p>
+
+$x_t$는 boundary위에 올라가 있다고 가정을 하고 다음단계의 adversarial example은 다음과 같이 정의할 수 있다. 
+
+$$x_{t+1} = \alpha_t x^{\star} + (1 - \alpha_t) \left\lbrace x_t + \zeta_t \frac{\triangledown S_{x^{\star}}(x_t)}{||\triangledown S_{x^{\star}}(x_t)||_2} \right\rbrace$$
+
+boundary위에 올라가 있는 $x_t$에서 gradient direction을 구하는데 이때 gradient라고 하는 것은 공격자의 원래 objective라 할 수 있는 함수 $S$에 대한 gradient를 말한다. 
+이러한 gradient에 대해서 $L_2$ norm값으로 나누어( $\frac{\triangledown S_{x^{\star}}(x_t)}{||\triangledown S_{x^{\star}}(x_t)||_ 2}$ ) 주어서 단위 벡터로 만들고 해당 방향으로 $\zeta_t$만큼 이동하도록 한다. 
+이때 $\zeta_ t$는 step size로 $x_t$에서 얼마만큼 이동해서 $\tilde{x}_ {t+1}$를 얻을 수 있는지를 결정한다. 결론적으로 $\tilde{x}_ {t+1} = x_t + \zeta_t \frac{\triangledown S_{x^{\star}}(x_t)}{||\triangledown S_{x^{\star}}(x_t)||_ 2}$ 가 된다. 이후 $\tilde{x}_ {t+1}$에서 $x^{\star}$에 가까워질 수 있도록 binary search를 진행하기 때문에 $\tilde{x}_ {t+1}$와 $x^{\star}$ 사이의 interpolation ( $\alpha_ t x^{\star} + (1-\alpha_t)\tilde{x}_ {t+1}$ )으로 표현할 수 있다. 이때 최대한 $\alpha_t$값이 커질 수 있도록 binary search를 진행하므로써 original image에 가까운 $x_{t+1}$을 얻을 수 있다. 
+
+그렇다면 이러한 과정을 반복했을 때 $x^{\star}$에 충분히 가까워질 수 있는가에 대한 답은 Decision boundary가 어떻게 형성되었는지에 따라서 여부가 달라진다. 단 본 논문에서는 최소한 local minima로 수렴할 수 있다고 아래와 같이 수렴성을 증명한다. 
+
+$$
+\begin{aligned}
+r(x_t, x^{\star}) :&= \cos \angle(x_t - x^{\star}, \triangledown S_{x^{\star}}(x_t)) \\  
+&= \frac{ \left\langle x_t - x^{\star}, \triangledown S_{x^{\star}}(x_t) \right\rangle }{ ||x_t - x^{\star}||_ 2 ||S_{x^{\star}}(x_t)||_ 2 }
+\end{aligned}
+$$
 
 
 
 
 # Reference
 ## Web Links
-https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28
+https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28    
+interpolation : https://ko.wikipedia.org/wiki/%EC%84%A0%ED%98%95_%EB%B3%B4%EA%B0%84%EB%B2%95    
+
 
 ## Papers
 HopSkipJumpAttack : https://arxiv.org/pdf/1904.02144.pdf   
