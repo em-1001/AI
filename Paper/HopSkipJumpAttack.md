@@ -193,6 +193,45 @@ $$x^{(t)} = arg \underset{x{'}}\max P(y_{adv} | \prod_{\epsilon_{t - 1}} (x^{'})
 
 
 # HopSkipJumpAttack
+HopSkipJumpAttack은 이전까지의 SOTA(State-of-the-art) Decision-based attack들 보다 더 높은 효율성을 보여주었다. 
+HopSkipJumpAttack은 아래와 같은 3가지 step을 반복적으로 수행한다. 
+
+1. Perfrom a binary search to find the boundary
+2. Estimate the gradient direction at the boundary point
+3. Geometric progression (Step-size search)
+
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/66b1b42f-48bb-4740-97d6-9d4bc4ac1b53" height="55%" width="55%"></p>
+
+a step 에서는 boundary에 도달할 때까지 이진탐색을 수행한다. 이때 $x^*$는 original image를 의미하고 $\tilde{x}_t$는 현재의 적대적 예제를 의미한다. 그래서 적대적 예제가 original image와 최대한 가까워질 수 있도록 
+적대적 예제와 원본 이미지를 잇는 직선 상에서 최대한 Decision boundary위에 올라갈 수 있도록 이진탐색을 진행한다. 참고로 사진에서 파란색 영역은 adversarial 영역이고 빨간색은 non-adversarial 영역이다. 
+이진탐색이후 b step에서는 Decision boundary위에서 gradient의 방향성을 예측할 수 있도록 한다. 이를 통해 사진에서 처럼 direction vector를 얻을 수 있게 되고 해당 방향으로 adversarial example을 이동시킨다. 
+이때 이동시킬 때 여전히 파란색 영역 위에 있도록 하기 위해서 정해진 step size만큼 이동하도록 한다. 이러한 과정을 c step의 Geometric progression이라고 한다. 이후부터는 다시 a step부터 과정을 반복한다. 
+
+이렇게 위의 과정을 반복하므로써 $x^* $에 최대한 가까워 질 수 있도록 하는 것이다. 참고로 $\tilde{x}_t$ 에서 $x^* $으로 가까워지도록 이진탐색을 진행할 때는 최대한 Decision boundary에 가깝도록 $x_t$를 구하지만 실제로는 여전히 파란색 영역에 속해있도록 해줘야 한다. 
+
+
+### Contribution
+HopSkipJumpAttack을 제안한 논문에서는 gradient의 direction을 예측하는 참신한 방법을 제안했다. direction을 예측할 때는 Decision boundary위에서 수행할 수 있도록 하고, 이때 model의 decision에만 접근이 가능한 상황에서 예측을 수행할 수 있기 때문에 실제 black-box attack에 효과적이다. 또한 실제로 이진탐색을 진행할 때도 정확히 Decision boundary위에 adversarial example을 올려놓기 어렵기 때문에 실제 구현상에서 발생할 수 있는 오차를 control하기 위한 방법도 제안하였다. 
+HopSkipJumpAttack은 이전까지의 다른 매서드와 비교할 때 상당히 query-efficient가 좋다. 나아가서 adversarial attack에 대한 지금까지의 방어기법인 defensive distillation, region-based classifiction, adversarial training, input binarization 등에 대한 효율성에 대해 테스트할 수 있다고 주장한다. 마지막으로 HopSkipJumpAttack은 $L_2$와 $L_{\infty}$ 모두 지원한다. 
+
+### Query-efficient
+앞서 언급한 query-efficient가 중요한 이유는 black-box에서의 가장 큰 어려움이 모델에 많은 쿼리를 날려야 한다는 점이다. 즉 쿼리 수가 매우 많이 요구되기 때문에 비용이 큰 것인데, 이전까지 제안된 공격기법들은 상대적으로 많은양의 쿼리가 요구되었다. 추가적으로 다양한 Decision-based Attack은 쿼리를 많이 날리되 매번 날리는 쿼리마다 그 이미지의 차이가 크지 않고 유사한 이미지를 여러번 날리기 때문에 deep learning 운영자의 입장에서는 비슷한 쿼리가 계속 날라오면 이를 일종의 공격으로서 받아들일 수도 있다. 이러한 측면에서 보았을 때도 query의 수가 적을수록 더 유리한 공격이다. 
+
+
+#### General Notations : White-box 
+우선 White-box상황일 때를 가정한다고 하면 아래와 같이 각각의 수학적 용어를 정의할 수 있다. 
+
+Label set(m개의 class) : $[m] = \left\lbrace1, ...., m\right\rbrace$  
+Output vector(각각의 class에 대한 결과값) : $y = (F_1(x), ..., F_m(x))$  
+The classifier : $C(x) := arg \underset{c \in [m]}\max F_c(x)$  
+
+The objective of the attacker:
+$$x$$
+
+
+
+
 
 
 # Reference
