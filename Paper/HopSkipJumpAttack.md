@@ -291,7 +291,7 @@ r(x_t, x^{\star}) :&= \cos \angle(x_t - x^{\star}, \triangledown S_{x^{\star}}(x
 \end{aligned}
 $$
 
-수렴성을 증명하기 위해서 함수 $r$을 정의하는데 이는 $x_t$에서 $x^{\star}$를 뺀 vector와 gradient $S$의 방향성이 얼마나 유사한지를 평가하는 함수이다. 위 그림을 함께 보면 $x_t - x^{\star}$를 계산한 vector와 gradient direction vector의 방향성이 비슷하면 $x_t$가 충분히 수렴했다는 것을 의미함을 알 수 있다. 이렇게 방향성이 같아지는 $x_t$ point를 stationary point라고 하고 여기서는 위 알고리즘을 반복하여 수행해도 여전히 같은 자리로 가게 되고 이렇게 되면 최적화가 왼료되었다고 볼 수 있다. 그리고 이러한 stationary point는 $r(x_t, x^{\star}) = 1$이 되는 지점이 된다. 
+수렴성을 증명하기 위해서 함수 $r$을 정의하는데 이는 $x_t$에서 $x^{\star}$를 뺀 vector와 gradient $S$의 방향성이 얼마나 유사한지를 평가하는 함수이다. 위 그림을 함께 보면 $x_t - x^{\star}$를 계산한 vector와 gradient direction vector의 방향성이 비슷하면 $x_t$가 충분히 수렴했다는 것을 의미함을 알 수 있다. 이렇게 방향성이 같아지는 $x_t$ point를 stationary point라고 하고 여기서는 위 알고리즘을 반복하여 수행해도 여전히 같은 자리로 가게 된다. 이렇게 되면 최적화가 왼료되었다고 볼 수 있고 이러한 stationary point는 $r(x_t, x^{\star}) = 1$이 되는 지점이 된다. 
 
 
 ### Lipschitz-Continuous Function
