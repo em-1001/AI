@@ -394,7 +394,7 @@ $\quad\quad\quad \zeta_t ← \zeta_t / 2$.
 
 ## Evaluation Results 
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/0d123d74-ab74-45f2-afc9-3bd232afbbbc" height="65%" width="65%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/f587a053-29fd-403d-82b4-1d41b522fff4" height="65%" width="65%"></p>
 
 HopSkipJumpAttack은 CIFAR-100, ImageNet data set에 대해 모두 훨씬 우수한 공격 성공률을 보였다. 
 특히 수만 번 이상의 쿼리를 날릴 수 있는 상황이라면, CW와 같은 state-of-the-art white-box attack 메서드와 비교할 만한 수준의 결과를 얻을 수 있었다. 
@@ -404,13 +404,13 @@ ImageNet data set를 이용해 학습된 모델을 공격한 결과는 다음과
 - Untargeted Attack : 원본 이미지와 다른 클래스로 인식되는 랜덤 노이즈에서 출발한다. 
 - Targeted Attack : 특정한 목표 클래스의 이미지로부터 출발하여 목표 클래스를 유지하면서 변경한다.
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/5f9afc77-1492-458c-8541-df661828f5a0" height="75%" width="75%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/1d6ef26f-067c-4bac-9a12-26e3ef77bcf1" height="75%" width="75%"></p>
 
 왼쪽은 $L_2$상에서 Untargeted Attack을 수행한 것이고 오른쪽은 $L_2$상에서 Targeted Attack을 수행한 것이다. Untargeted Attack은 약 1000개의 쿼리만 날렸음에도 원본 이미지와 시각적으로 유사함을 볼 수 있고, Targeted Attack은 약 10000이상의 쿼리를 날려야 Target Class를 유지하는 상태로 원본 이미지와 유사한 형태를 띄는 것을 볼 수 있다. 당연히 Untargeted Attack 더 쉬운 공격 시나리오이기 때문에 이러한 차이가 나는 것이다. 
 
 ## Defense Mechanisms under Decision-based Attacks
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/edcee8b0-0785-4f1e-a657-4472dfc1f820" height="65%" width="65%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/092b82d2-eef6-44fa-a11a-7b8252a366f7" height="65%" width="65%"></p>
 
 본 논문은 이전까지 제안되었던 다양한 Defense Mechanisms에 대해서도 공격을 수행하였다. 논문에서 test한 방어 기법 중 Adversarial Training은 아직까지도 강력한 방어 기법이라고 알려져 있다. test결과 Adversarial Training, Defensive Distillation, Region-based Classification에 대해서 기존의 다른 공격 기법 만큼 혹은 그 이상의 공격 성능을 보여주었다. Adversarial Training에 대해서도 충분히 많은 쿼리를 날릴 수 있다면 11% 성공률로 강력한 공격을 수행하는 것을 볼 수 있다. 이는 HopSkipJumpAttack이 약한 공격이라 그런 것이 아니라 Adversarial Training 자체가 매우 강력한 방어 기법이기 때문인 것이다.          
 
