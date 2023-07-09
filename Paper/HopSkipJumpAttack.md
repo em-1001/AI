@@ -360,8 +360,7 @@ $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.
 　　**end if**     
 　**end while**    
 　Output $x^{''} = \prod_{x, \alpha_u}(x^{'})$.   
- 
-<br>
+
 <br>
 <br>
 
@@ -371,10 +370,29 @@ $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.
 **Ensure** : Perturbed image $x_t$.    
 　Set $\theta$ (Equation (15)).  
 　Initialize at $x_0$ with $\phi_x \cdot (\tilde{x_0}) = 1$.  
-　Compute $d_0 = ||\tilde{x_0} - x^{\star}||_p$.    
+　Compute $d_0 = ||\tilde{x_0} - x^{\star}||_ p$.    
 　**for** $t$ in $1, 2, ..., T-1$ **do**  
-　　**(Boundary search)**   
-　　$\quad\quad\quad x_t = BIN-SEARCH($
+　　**(Boundary search)**     
+$\quad\quad x_ t = BIN-SEARCH(\tilde{x}_ {t-1}, x, \theta, \phi_{x^{\star}}, p)$  
+　　**(Gradient-direction estimation)**  
+　　Sample $B_t = B_0 \sqrt{t}$ unit vectors $u_1, ..., u_{B_t}$.  
+　　Set $\delta_t$ (Equation (15)).    
+　　Compute $v_t(x_t, \delta_t)$ (Equation (12)).   
+　　**(Step size search)**  
+　　Initialize step size $\zeta_t = ||x_t - x^{\star}||_ p / \sqrt{t}$.  
+　　**while** $\phi_{x^{\star}}(x_t + \epsilon_t v_t) = 0$ **do**      
+$\quad\quad\quad \zeta_t ← \zeta_t / 2$.     
+　　**end while**   
+　　Set $\tilde{x}_ t = x_ t + \zeta_t v_t$.    
+　　Compute $d_ t = ||\tilde{x}_ t - x^{\star}||_ p$.    
+　**end for**    
+　Output $x_ t =  BIN-SEARCH(\tilde{x}_ {t-1}, x, \theta, \phi_{x^{\star}}, p)$   
+  
+<br>
+<br>
+
+
+  
 
 
 # Reference
