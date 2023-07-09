@@ -336,7 +336,7 @@ $$\lim_{\delta \to 0} \cos \angle \left(\mathbb{E} [\tilde{\triangledown S}(x_t,
 
 $$
 \begin{aligned}
-Baseline \bar{\phi} &:= \frac{1}{B} \sum_{b=1}^B \phi(x^{'} + \delta u_b) \\
+Baseline \ \bar{\phi} &:= \frac{1}{B} \sum_{b=1}^B \phi(x^{'} + \delta u_b) \\
 \widehat{\triangledown S}(x^{'}, \delta) &:= \frac{1}{B-1} \sum_{b=1}^B (\phi(x^{'} + \delta u_b) - \bar{\phi})u_b
 \end{aligned}$$
 
