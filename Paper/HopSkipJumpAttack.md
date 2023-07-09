@@ -347,7 +347,7 @@ $$Var(\widehat{\triangledown S}) = Var(\tilde{\triangledown S}) \left\lbrace 1 -
 
 ### Overall Algorithm
 
-**Algorithm 1** Binary Search 
+**Algorithm 1** Binary Search    
 **Require** : Samples $x^{'}, x,$ with a binary function $\phi$, such that      
 $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.    
 **Ensure** : A sample $x^{''}$ near the boundary.        
