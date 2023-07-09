@@ -322,7 +322,6 @@ $$\tilde{\triangledown S}(x_t, \delta) := \frac{1}{B}\sum_{b=1}^B \phi_{x^{\star
 
 limited attack의 공식과 유사한데 본 논문에서는 monte carlo method를 이용해서 gradient의 방향성을 예측할 수 있다고 한다. 공격자 입장에서는 함수 $\phi$에 대해서는 접근이 가능하므로 현재 decision boundary위에 올라가 있는 $x_t$가 있다고 했을 때 여기에 random unit인 $u_b$를 뽑아서 해당 random noise를 $\delta$만큼 반영할 수 있도록 하고 해당 위치에서 공격 성공인지 아닌지에 대한 값을 아래 사진 처럼 +1 또는 -1로 얻을 수 있을 것이다. 따라서 어떠한 방향으로 갔을 때 공격을 성공한다는 정보를 이용할 수 있고 공격 성공시 $\phi$를 거쳐서 나온 +1값에 다시 $u_b$를 곱해주어 해당 노이즈를 반영할 수 있도록 해준다. 이러한 과정을 $B$만큼 반복을 하고 해당 값들의 평균을 구해서 gradient의 direction값을 예측할 수 있다.
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/b486c422-73a8-4969-a672-01860a289fe6" height="20%" width="20%"></p>
 
 실제 논문에서 증명된 결과에 따르면 $x_t$가 $S(x_t)$의 boundary위에 올라가 있을 때 direction 예측값인 $\tilde{\triangledown S}(x_t, \delta)$은 실제 $\triangledown S(x_t)$의 direction값과 같아질 수 있다고 한다. 
 
@@ -330,10 +329,38 @@ $$\lim_{\delta \to 0} \cos \angle \left(\mathbb{E} [\tilde{\triangledown S}(x_t,
 
 이를 수식으로 표현하면 위와 같고 이 때의 조건은 $x_t$가 정확히 boundary위에 있어야 하며 noise 크기인 $\delta$가 0에 가까워져야 한다는 것이다. 
 
-다만 실제 구현상에서는 문제가 발생할 수 있는데 binary search를 할 때 정확히 boundary위에 올리는 것은 불기능하기 때문에 실제 공격상황에서는 이론적으로 증명된 값과 같이 $\delta$가 0에 가까운 값이면 안된다. 위 사진에서의 경우 $x_t$가 정확히 boundary에 위치하지 않고 그 위인 빨간색 영역에 위치했다고 하고 $\delta$도 0에 가까운 매우 짧은 값이라고 하면 $\phi$함수로 판단하기에 파란색으로 향하는 vector도 빨간색 영역안에 속하게 되어서 잘못 판단하게 된다. 그래서 논문에서는 $\delta$값으로 $\delta = \sqrt{d}\zeta$를 사용한다. 여기서의 $\zeta$값은 앞서 다른 step size가 아니고 binary search를 수행할 때 사용했던 정밀도(threshold)를 말한다.  
+다만 실제 구현상에서는 문제가 발생할 수 있는데 binary search를 할 때 정확히 boundary위에 올리는 것은 불기능하기 때문에 실제 공격상황에서는 이론적으로 증명된 값과 같이 $\delta$가 0에 가까운 값이면 안된다. Iterative Algorithm for $L_2$ Distance 사진을 예시로 $x_t$가 정확히 boundary에 위치하지 않고 그 위인 파란색 영역에 위치했다고 하고 $\delta$도 0에 가까운 매우 짧은 값이라고 하면 $\phi$함수로 판단하기에 빨간색으로 향하는 vector도 파란색 영역안에 속하게 되어서 잘못 판단하게 된다. 그래서 논문에서는 $\delta$값으로 $\delta = \sqrt{d}\zeta$를 사용한다. 여기서의 $\zeta$값은 앞서 다른 step size가 아니고 binary search를 수행할 때 사용했던 정밀도(threshold)를 말한다.  
 
 ### Variance Reduction   
-또한 $\delta = \sqrt{d}\zeta$와 같이 델타를 크게 만들었다 하더라도 여전히 파란색을 향하는 vector이면서 빨간색에 속해버리는 vector가 있을 수 있는데 이를 해결하기 위해 Variance Reduction기법을 이용한다. 
+또한 $\delta = \sqrt{d}\zeta$와 같이 델타를 크게 만들었다 하더라도 여전히 빨간색 향하는 vector이면서 파란색에 속해버리는 vector가 있을 수 있는데 이를 해결하기 위해 Variance Reduction기법을 이용한다. 
+
+$$
+\begin{aligned}
+Baseline \bar{\phi} &:= \frac{1}{B} \sum_{b=1}^B \phi(x^{'} + \delta u_b) \\
+\widehat{\triangledown S}(x^{'}, \delta) &:= \frac{1}{B-1} \sum_{b=1}^B (\phi(x^{'} + \delta u_b) - \bar{\phi})u_b
+\end{aligned}$$
+
+Baseline 변수인 $\bar{\phi}$는 $\phi$값의 평균을 구한 것이다. 이렇게 만든 baseline 변수를 gradient estimate과정에서 매번 빼줄 수 있도록 한다. 실제로 이렇게 예측값을 구했을 때 variance가 감소하는 효과를 보였다. 논문에서 증명된 내용을 보면 baseline을 빼줌으로써 variance가 다음과 같이 감소한다고 한다. 
+
+$$Var(\widehat{\triangledown S}) = Var(\tilde{\triangledown S}) \left\lbrace 1 - Const \cdot B^{-2p} \right\rbrace$$
+
+
+### Overall Algorithm
+
+**Algorithm 1** Binary Search 
+**Require** : Samples $x^{'}, x,$ with a binary function $\phi$, such that      
+$\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.    
+**Ensure** : A sample $x^{''}$ near the boundary.        
+　Set $\alpha_l = 0$ and $\alpha_u = 1$.  
+　**while** $|\alpha_l - \alpha_u| > \theta$ **do**.   
+　　Set $\alpha_m ← \frac{\alpha_l + \alpha_u}{2}$.    
+　　**if** $\phi(\prod_{x, \alpha_m} (x^{'})) = 1$ **then**   
+　　　Set $\alpha_u ← \alpha_m$.        　　
+　　**else**         
+　　　Set $\alpha_l ← \alpha_m$.        
+　　**end if**     
+　**end while**    
+　Output $x^{''} = \prod_{x, \alpha_u}(x^{'})$.   
 
 
 # Reference
