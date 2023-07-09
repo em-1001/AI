@@ -373,7 +373,7 @@ $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.
 　Initialize at $x_0$ with $\phi_x \cdot (\tilde{x_0}) = 1$.  
 　Compute $d_0 = ||\tilde{x_0} - x^{\star}||_p$.    
 　**for** $t$ in $1, 2, ..., T-1$ **do**  
-　　**(Boundary search)**
+　　**(Boundary search)**   
 　　$\quad\quad\quad x_t = BIN-SEARCH($
 
 
