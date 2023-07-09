@@ -365,6 +365,18 @@ $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.
 <br>
 <br>
 
+**Algorithm 2** HopSkipJumpAttack  
+**Require** : Classifier $C$, a sample $x$, constraint $\ell_p$, initial batch    
+　size $B_0$, iterations $T$.    
+**Ensure** : Perturbed image $x_t$.    
+　Set $\theta$ (Equation (15)).  
+　Initialize at $x_0$ with $\phi_x \cdot (\tilde{x_0}) = 1$.  
+　Compute $d_0 = ||\tilde{x_0} - x^{\star}||_p$.    
+　**for** $t$ in $1, 2, ..., T-1$ **do**  
+　　**(Boundary search)**
+　　$\quad\quad\quad x_t = BIN-SEARCH($
+
+
 # Reference
 ## Web Links
 https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28    
