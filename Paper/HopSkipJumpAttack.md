@@ -346,7 +346,6 @@ $$Var(\widehat{\triangledown S}) = Var(\tilde{\triangledown S}) \left\lbrace 1 -
 
 
 ### Overall Algorithm
-
 **Algorithm 1** Binary Search    
 **Require** : Samples $x^{'}, x,$ with a binary function $\phi$, such that      
 $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.    
@@ -355,13 +354,16 @@ $\quad\phi(x^{'}) = 1, \phi(x) = 0$, threshold $\theta$, constraint $\ell_p$.
 　**while** $|\alpha_l - \alpha_u| > \theta$ **do**.   
 　　Set $\alpha_m ← \frac{\alpha_l + \alpha_u}{2}$.    
 　　**if** $\phi(\prod_{x, \alpha_m} (x^{'})) = 1$ **then**   
-　　　Set $\alpha_u ← \alpha_m$.             　　
+　　　Set $\alpha_u ← \alpha_m$. <br>
 　　**else**         
 　　　Set $\alpha_l ← \alpha_m$.        
 　　**end if**     
 　**end while**    
 　Output $x^{''} = \prod_{x, \alpha_u}(x^{'})$.   
-
+ 
+<br>
+<br>
+<br>
 
 # Reference
 ## Web Links
