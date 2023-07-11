@@ -9,7 +9,7 @@ multi-view information 캡처를 위해 카메라가 움직일 필요가 있는 
 논문에서 제안하는 eye images를 3D NeRF로 재구성하는 것은 크게 2가지 어려움이 있었다. 
 첫 번째는 source separation 이다. 눈의 복잡한 홍채(**iris**) 질감에서 나오는 반사를 분리해야 했다. 
 이러한 복잡한 패턴은 선명한 일반적인 이미지와는 달리 픽셀 대응을 방해하고 3D 복원에 모호성을 주었다.
-두 번째 문제는 각막(**cornea**) pose estimation이다. 눈은 매우 작기 때문에 정확히 localize하기가 힘들다. 
+두 번째 문제는 각막(**cornea**) pose(transpose) estimation이다. 눈은 매우 작기 때문에 정확히 localize하기가 힘들다. 
 multi-view reconstruction는 위치의 정확성과 3D orientations에 의존하기 때문에 cornea pose estimation 문제는 구현을 어렵게 만든다. 
 
 이러한 문제를 해결하기 위해서 논문에서는 NeRF를 eye images를 training할 수 있도록 2가지 중요한 요소를 통해 repurpose 했다. 
