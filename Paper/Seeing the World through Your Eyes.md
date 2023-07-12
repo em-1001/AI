@@ -22,6 +22,8 @@ challenges presented by the small size of eyes.
 - **Cornea pose refinement** :  cornea pose refinement procedure는 noisy한 눈의 pose estimation을 경감시켜준다. 이는 사람의 눈에서 feature extraction하는 것을 가능하게 해준다.   
 
 # Related Work
+### Catadioptric imaging
+Catadioptric imaging은 image capturing을 하는데 렌즈와 거울의 조합을 이용한다. 본질적으로 catadioptric imaging는 렌즈 기반 이미징 시스템의 효과적인 시야 확장을 위해 추가적인(주로 곡선의 형태) 거울을 사용한다.
 
 
 
