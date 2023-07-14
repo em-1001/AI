@@ -25,6 +25,15 @@ challenges presented by the small size of eyes.
 ### Catadioptric imaging
 Catadioptric imaging은 image capturing을 하는데 렌즈와 거울의 조합을 이용한다. 본질적으로 catadioptric imaging는 렌즈 기반 이미징 시스템의 효과적인 시야 확장을 위해 추가적인(주로 곡선의 형태) 거울을 사용한다.
 
+catadioptric imaging system에 대해 연구가 된 3가지 기준은 다음과 같다. 
+1. 거울의 모양
+2. 카메라의 해상도
+3. 카메라의 초점 설정
+
+이러한 연구는 왜곡을 정량화하는 metric과 단일 시점 catadioptric camera로 획득한 이미지의 왜곡을 최소화하는 방법을 제공했다. 
+또한 catadioptric imaging system을 실현하기 위한 창의적인 방법은 사람의 눈을 2개의 곡선 거울로 취급하는 것이었다. 
+
+
 
 
 # Reference
