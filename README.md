@@ -1,5 +1,5 @@
 # Computer vision
-## CS231
+## CS231n
 1. [Image Classification](https://github.com/em-1001/AI/blob/master/CS231n/1.Image%20Classification.md)
 2. [Loss Functions and Optimization](https://github.com/em-1001/AI/blob/master/CS231n/2.Loss%20Functions%20and%20Optimization.md)
 3. [Back Propagation](https://github.com/em-1001/AI/blob/master/CS231n/3.Back%20Propagation.md)
