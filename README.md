@@ -21,7 +21,7 @@
 - [Shadow Attack](https://github.com/em-1001/AI/blob/master/Paper/Shadow%20Attack.md)
 
 
-## Kaggle
+# Kaggle
 ### Multiclass Classification
 - [Cats or Dogs - using CNN with Transfer Learning]
 - [Brain Tumor MRI Classification: TensorFlow CNN]
