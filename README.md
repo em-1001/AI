@@ -22,29 +22,9 @@
 
 
 # Kaggle
-### Multiclass Classification
-- [Cats or Dogs - using CNN with Transfer Learning]
-- [Brain Tumor MRI Classification: TensorFlow CNN]
-- [EfficientNetB5 with Keras (APTOS 2019)]
-
 ### Multilabel Classification
-- [pretrained ResNet34 with RGBY (0.460 public LB)]
+- [Protein Atlas Image Classification]
 
-### Object Detection
-- [End to End Object Detection with Transformers:DETR]
-- [Airbus Mask-RCNN and COCO transfer learning]
-
-### Segmentation
-- [Sartorius - Starter Torch Mask R-CNN [LB=0.273]]
-- [Mask-RCNN and Medical Transfer Learning SIIM-ACR
-
-### Emotion Recognition
-- [Facial Emotion Recognition using Transfer Learning]
-- [Emotion Detection]
-
-### Pose Estimation
-- [CenterNet Baseline]
-- [Video Anomaly Detection]
 
 # Links 
 ## Math
