@@ -19,6 +19,7 @@
 - [Backdoor Attack](https://github.com/em-1001/AI/blob/master/Paper/Backdoor%20Attack.md)
 - [HopSkipJumpAttack](https://github.com/em-1001/AI/blob/master/Paper/HopSkipJumpAttack.md)
 - [Shadow Attack](https://github.com/em-1001/AI/blob/master/Paper/Shadow%20Attack.md)
+- [Boosting Adversarial Attacks with Momentum](https://github.com/em-1001/AI/blob/master/Paper/Boosting%20Adversarial%20Attacks%20with%20Momentum.md)
 
 
 # Kaggle
