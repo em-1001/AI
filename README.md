@@ -22,6 +22,9 @@
 
 
 # Kaggle
+### Multiclass Classification
+- [Brain Tumor Detection](https://github.com/em-1001/AI/blob/master/Kaggle/brain-tumor-classification-mri.ipynb)
+
 ### Multilabel Classification
 - [Protein Atlas Image Classification](https://github.com/em-1001/AI/blob/master/Kaggle/protein-atlas-image-classification.ipynb)
 
