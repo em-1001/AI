@@ -125,15 +125,15 @@ $$g_{t+1} = \mu \cdot g_t + \frac{J(x_t^{\star}, y^{\star})}{||\triangledown_x J
 
 위 처럼 특정한 $y^{\star}$ class로 분류가 되는 방향으로 loss를 구성하여 update를 진행하면 되는 것이다. 
 
-**Targeted MI-FGSM** with an $L_{infty}$ norm bound:
+**Targeted MI-FGSM** with an $L_{\infty}$ norm bound:
 
 $$x_{t+1}^{\star} = x_t^{\star} - \alpha \cdot sign(g_{t+1})$$
 
-또한 $L_{infty}$ norm bound에 대해서는 앞서 확인한 방법대로 FGSM을 반복해서 공격을 수행하면 된다. 
+또한 $L_{\infty}$ norm bound에 대해서는 앞서 확인한 방법대로 FGSM을 반복해서 공격을 수행하면 된다. 
 
 **Targeted MI-FGM** with an $L_2$ norm bound:
 
-$$x_{t+1}^{\star} = x_t^{\star} - \alpha \cdot \frac{g_{t+1}}{||g_{t+1}_2||}$$
+$$x_{t+1}^{\star} = x_t^{\star} - \alpha \cdot \frac{g_{t+1}}{||g_{t+1}||_2}$$
 
 반면 FGSM이 아니라 $L_2$ distance상에서도 perturbation의 크기가 제한될 수 있도록 해서 공격을 수행할 수 있다. 위 식에서는 $L_2$ projection이 사용된 것을 확인할 수 있다. 
 
