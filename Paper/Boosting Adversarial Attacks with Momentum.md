@@ -116,6 +116,27 @@ Ensemble 모델을 공격할 때의 결과는 위와 같다. Ensemble 항목은 
 공격 대상이 Ensemble일 때의 결과는 위와 같다. 마찬가지로 Ensemble 상황에서는 모든 모델 즉, 7개의 모델에 대해서 공통적으로 동작하는 적대적 예제를 만들었을 때는 white-box 상황이므로 100%에 가까운 성공률을 보인다. Hold-out 에서는 왼쪽 모델을 제외한 앞서 표에서 확인한 4가지 모델과 현재 표의 2개의 Ensemble모델을 합친 6개의 Ensemble모델에 대해 동작하는 적대적 예제를 만들고 해당 모델에 black-box 공격을 수행한 것이다. 결과를 보면 black-box 상황에서 ensemble adversarial training이 된 모델에 대해서도 좋은 공격 성공률을 보이는 것을 볼 수 있다. white-box도 마찬가지로 ensemble adversarial training을 사용한다 하더라도 입실론만 충분히 크다면 100%에 가깝게 공격이 가능하다.  
 
 
+## Attack Method 
+본 논문은 앞서 살펴본 공격 설정외에 Momentum iterative method가 다양한 공격 설정에 대해서도 적용할 수 있다고 한다. 
+
+예를 들어 untargeted가 아닌 targeted 공격을 위한 기본적인 gradient계산 공식은 다음과 같이 작성할 수 있다. 
+
+$$g_{t+1} = \mu \cdot g_t + \frac{J(x_t^{\star}, y^{\star})}{||\triangledown_x J(x_t^{\star}, y^{\star})||_1}$$
+
+위 처럼 특정한 $y^{\star}$ class로 분류가 되는 방향으로 loss를 구성하여 update를 진행하면 되는 것이다. 
+
+**Targeted MI-FGSM** with an $L_{infty}$ norm bound:
+
+$$x_{t+1}^{\star} = x_t^{\star} - \alpha \cdot sign(g_{t+1})$$
+
+또한 $L_{infty}$ norm bound에 대해서는 앞서 확인한 방법대로 FGSM을 반복해서 공격을 수행하면 된다. 
+
+**Targeted MI-FGM** with an $L_2$ norm bound:
+
+$$x_{t+1}^{\star} = x_t^{\star} - \alpha \cdot \frac{g_{t+1}}{||g_{t+1}_2||}$$
+
+반면 FGSM이 아니라 $L_2$ distance상에서도 perturbation의 크기가 제한될 수 있도록 해서 공격을 수행할 수 있다. 위 식에서는 $L_2$ projection이 사용된 것을 확인할 수 있다. 
+
 
 # Reference
 ## Web Link
