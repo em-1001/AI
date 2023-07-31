@@ -104,6 +104,18 @@ loss에 들어가는 logit값 $l(x)$는 Ensemble로 총 K개의 모델을 사용
 즉 특정한 local maxima에 각각 개별적으로 빠지는 것이 아니라 상대적으로 global한 maxima를 찾아낸다는 것이다. 
 
 
+## Attacking an Ensemble of Models
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/92871b65-06b7-4529-bf7f-d2de04f728ee" height="80%" width="80%"></p>
+
+Ensemble 모델을 공격할 때의 결과는 위와 같다. Ensemble 항목은 모든 모델을 이용해 white-box 공격을 한 것이고, Hold-out은 초록색의 공격 대상 모델을 제외한 나머지 3개의 Ensemble을 이용해 적대적 예제를 만들고 black-box 공격을 한 것이다. 
+
+결과를 확인해 보면 white-box 상황에서는 100%에 가까운 공격 성공률을 보이고, black-box 상황에서는 나머지 3개의 Ensemble을 이용해 공격했을 때 제외된 공격 대상 모델에 대해서도 좋은 공격 성공률을 보이는 것을 확인할 수 있다.  
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/f3f0f7f9-52a7-4b47-9919-c32474226566" height="50%" width="50%"></p>
+
+공격 대상이 Ensemble일 때의 결과는 위와 같다. 마찬가지로 Ensemble 상황에서는 모든 모델 즉, 7개의 모델에 대해서 공통적으로 동작하는 적대적 예제를 만들었을 때는 white-box 상황이므로 100%에 가까운 성공률을 보인다. Hold-out 에서는 왼쪽 모델을 제외한 앞서 표에서 확인한 4가지 모델과 현재 표의 2개의 Ensemble모델을 합친 6개의 Ensemble모델에 대해 동작하는 적대적 예제를 만들고 해당 모델에 black-box 공격을 수행한 것이다. 결과를 보면 black-box 상황에서 ensemble adversarial training이 된 모델에 대해서도 좋은 공격 성공률을 보이는 것을 볼 수 있다. white-box도 마찬가지로 ensemble adversarial training을 사용한다 하더라도 입실론만 충분히 크다면 100%에 가깝게 공격이 가능하다.  
+
+
 
 # Reference
 ## Web Link
