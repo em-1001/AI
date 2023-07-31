@@ -33,12 +33,84 @@ FGSM을 White-Box Attack 상황이라 가정하면 입력에 대한 비용 함�
 
 
 # Boosting Adversarial Attacks with Momentum
+## MI-FGSM(Momentum Iterative Fast Gradient Sign Method)
+본 논문에서는 Non-targeted 공격을 위한 목적 함수를 다음과 같이 정의한다. 
+
+$$\underset{x^{\star}}{arg \max} J(x^{\star}, y),\ s.t.\ ||x^{\star} - x||_{\infty} \leq \epsilon$$
+
+FGSM과 마찬가지로 $L_{\infty}$ norm안에서 입실론 이하의 크기만큼 변경될 수 있도록 하되 loss 함수의 값이 최대가 될 수 있도록 한다. 
+이때 매 번 gradient를 새롭게 구해서 업데이트를 수행하는 것이 아니라 앞에서 부터 t개 까지의 기울기 정보를 모두 가진 상태에서 Momentum을 활용해 업데이트를 수행한다. 
+이전까지의 기울기 정보를 활용하므로써 poor local maxima에 빠지지 않도록 한다. 전체 알고리즘은 다음과 같다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/7b0ad2b8-9391-4de7-907a-46ab73b7cae6" height="60%" width="60%"></p>
+
+전체적인 흐름은 현재의 적대적 예제에 대해서 gradient를 구하고 이렇게 구해진 gradient를  $L_1$ distance에 대해 정규화를 수행하고 이전 단계에 사용된 gradient에 뮤 만큼의 factor를 곱해서 그 값을 반영할 수 있도록 한다(6). 여기서 $µ \cdot g_t$를 더해준 부분이 Momentum을 적용한 부분이라고 할 수 있다. 기본적으로 본 논문에서는 이 µ 값을 1로 설정해서 사용한다. 
+
+다음으로 적대적 예제를 sign gradient를 통해 업데이트하고(7) 이 부분은 FGSM과 동일하다. 즉 FSGM을 여러번 수행하는 $L_{\infty}$ PGD Attack과 동일한 방법인데 Gradient를 구하는 과정에서 Momentum을 적용한 것이라 이해할 수 있다. 
+
+또한 현재 알고리즘에서는 PGD에 쓰이는 Clip함수가 보이지 않는데 그 이유는 알파 자체를 $\alpha = \epsilon / T$로 설정했기 때문에 T 번 만큼 반복을 했을 때 각각의 픽셀에 대해서 최대 입실론 만큼만 바뀔 수 있기 때문이다.   
+
+## MI-FGSM for Ensemble of Models 
+본 논문에서는 이러한 MI-FGSM이 높은 transferability를 갖기 때문에 특히 black box attack에서 강점을 갖는다고 주장하는데 이러한 transferability를 높을 수 있는 방법이 바로 Ensemble 모델에 대한 MI-FGSM이다.  
+
+이떄 모델의 Ensemble에 대해서 MI-FGSM을 수행하기 위해 Ensemble in logits 메서드를 사용하는데 이는 쉽게 말해 Logits 값의 가중치 합을 구하고 여기에 Softmax Cross-Entropy Loss를 구하고 이 Loss로 업데이트를 진행하는 것이다. 
+
+Non-targeted Attack을 위한 목적 함수는 다음과 같다. 
+
+$$\underset{x^{\star}}{arg \max} J(x^{\star}, y),\ s.t.\ ||x^{\star} - x||_{\infty} \leq \epsilon$$
+
+$$l(x) = \sum_{k=1}^K w_k l_k(x)$$
+
+$$J(x, y) = -1_y \cdot log(softmax(l(x)))$$
+
+loss에 들어가는 logit값 $l(x)$는 Ensemble로 총 K개의 모델을 사용한다고 했을 때 각각의 모델에 대한 logit값의 가중치 합을 구하는 것이다. 
+이러한 가중치 합에 softmax를 취한뒤 log를 적용해 cross-entropy를 구하는 것이다. 
+
+전체적인 알고리즘은 다음과 같다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/253de828-0846-4674-8b86-63db9b0dcbc7" height="60%" width="60%"></p>
+
+위에서 봤던 것과 거의 동일한 방식으로 MI-FGSM을 수행하는 것을 볼 수 있다. 단, K개의 모델을 모두 속일 수 있는 적대적 예제를 만드는 것이기 때문에 총 T번만큼 반복을 수행할 때 현재의 적대적 예제를 각각의 분류모델에 넣어서 logit값들을 모두 구한 뒤 이러한 logit값들의 가중치 합을 구하고 이 가중치 값에 대한 cross-entropy loss를 구해서 loss를 증가시키는 방향으로 untargeted attack을 수행한다.
+
+위 알고리즘에서 보이는 (6), (7)은 앞서 살펴본 MI-FGSM의 (6), (7)과정과 동일하다. 결과적으로 총 K개의 모델을 모두 속일 수 있는 적대적 예제를 만듦으로써 보단 global한 perturbation을 찾을 수 있게 되는 것이고 transferability가 높아지는 것이다. 
+
+
+## Experiment result
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/a02b3582-015d-4310-9eaa-c0b229812013" height="80%" width="80%"></p>
+
+실험 결과는 위와 같다. white-box 상황에서는 하나의 모델에 대해 100%에 가까운 공격 성공률을 보이고, black-box 상황에서는 하나의 모델에 대해 좋은 공격 성능을 보인다. 다만 black box 상황에서 ensemble adversarial training을 적용한 모델에 대해서는 낮은 공격 성공률을 보인다. ensemble adversarial training을 적용한 모델은 방어율이 높을 뿐만 아니라 특정한 모델에 대해서만 만든 perturbation은 해당 모델에 대해서 overfitting되는 경향이 있기 때문에 해당 모델이 아닌 다른 모델에 대해서는 낮은 공격 성공률이 나오게 된다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/bad0fd86-df03-49c6-963c-c825df9cafcd" height="80%" width="80%"></p>
+
+추가적으로 MI-FGSM에서 decay factor인 µ를 1로 설정했을 때 경험적으로 우수한 공격력을 보인다고 한다. 
+또한 MI-FGSM은 많은 수의 반복을 거쳐도 높은 공격 성공률을 보였다. 참고로 위 그래프에서 초록색 선은 white box attack이고, 다머지는 다른 모델에 대해 transfer based attack을 한 것이다. 
+
+반복 수가 많아지면 대상 모델로 지정한 모델에 대해서만 overfitting된 적대적 예제가 만들어지기 쉬운데 MI-FGSM은 보다 global한 perturbation을 찾기에 유리하기 때문에 black box 상황에서 많은 수의 반복을 거친다 하더라도 상대적으로 덜 overfitting되고 높은 공격 성공률을 보일 수 있게 되는 것이다. 
+
+
+## Advantages of MI-FGSM
+- 기본적인 FGSM의 경우 단 한번의 step으로 공격을 수행하기 때문에 공격 대상 모델에 대해 under-fitting되는 특징이 있다. 
+이 때문에 어느 정도의 transferability는 보이지만, 적대적 예제를 만든 모델 즉, white box 모델에 대해서는 충분히 강력하지 못하다. 
+
+- 반면 I-FGSM(Iterative FGSM)은 과하게 over-fitting되며 poor local maxima에 빠질 수 있다. 
+이 때문에 오히려 일반적인 FGSM보다 transfer-based-attack에서 좋은 성능을 내지 못하게 된다. 
+
+- 본 논문에서 제안한 Moemtum을 활용한 MI-FGSM은 poor local maxima에 빠지지 않은 경향이 있다. 
+결과적으로 좋은 transferability를 보이며 white-box 공격과 black-box 공격 모두 우수한 성능을 보인다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/8d978b61-fa31-4501-b534-dfff74b5e53d" height="50%" width="50%"></p>
+
+실제 MI-FGSM을 이용해 만들어지는 perturbation들은 코사인 유사도(cosine similarity)가 높다. 
+즉 특정한 local maxima에 각각 개별적으로 빠지는 것이 아니라 상대적으로 global한 maxima를 찾아낸다는 것이다. 
+
 
 
 # Reference
 ## Web Link
-https://www.youtube.com/watch?v=QCgujoTPbmU&list=LL&index=3&t=80s  
+https://www.youtube.com/watch?v=QCgujoTPbmU&list=LL&index=3&t=80s    
+
 ## Paper
+https://arxiv.org/pdf/1710.06081.pdf  
 
 
 
