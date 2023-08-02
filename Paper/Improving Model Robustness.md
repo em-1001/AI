@@ -28,7 +28,7 @@ $\underset{\delta \in S}\max L(\theta, x + \delta, y)$ 이 부분은 PGD를 통�
 
 다만 이러한 연구분야에서 가장 중요한 점이 Evaluation시에 네트워크는 ImageNet-C에 대한 dataset을 직접적으로 학습데이터로 사용해서는 안된다는 것이다. 기존에 가지고 있는 학습 dataset에 대해서 적절하게 수정해서 학습에 사용하고 직접적으로 ImageNet-C와 같이 손상된 dataset으로 학습을 진행하지 않으면서 test 시에는 ImageNet-C에 대해 좋은 성능을 내는 것이 목표인 것이다.             
 
-
+25:20
 
 
 # Reference 
