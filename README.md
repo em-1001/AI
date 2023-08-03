@@ -32,6 +32,6 @@
 ### Multilabel Classification
 - [Protein Atlas Image Classification](https://github.com/em-1001/AI/blob/master/Kaggle/protein-atlas-image-classification.ipynb)
 
+<br>
 
-
-<p align="center"><img src="https://github.com/em-1001/AI/blob/master/Images/cat2.jpg"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/blob/master/Images/cat_detection.jpg"></p>
