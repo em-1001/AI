@@ -28,7 +28,16 @@ $\underset{\delta \in S}\max L(\theta, x + \delta, y)$ 이 부분은 PGD를 통�
 
 다만 이러한 연구분야에서 가장 중요한 점이 Evaluation시에 네트워크는 ImageNet-C에 대한 dataset을 직접적으로 학습데이터로 사용해서는 안된다는 것이다. 기존에 가지고 있는 학습 dataset에 대해서 적절하게 수정해서 학습에 사용하고 직접적으로 ImageNet-C와 같이 손상된 dataset으로 학습을 진행하지 않으면서 test 시에는 ImageNet-C에 대해 좋은 성능을 내는 것이 목표인 것이다.             
 
-25:20
+그래서 Evaluation metric으로는 Corrupted Error를 제안한다. 이는 기존 base 모델인 AlexNet과 비교해서 얼마나 우수한지를 평가한다. 
+
+$$CE_c^f = \left(\sum_{s=1}^5 E_{s,c}^f \right) / \left(\sum_{s=1}^5 E_{s,c}^{AlexNet} \right)$$
+
+$c$ : Corruption type  
+$s$ : Severity (1 $leq$ s $leq$ 5)  
+$E_{s,c}^f$ : Top-1 error of a network $f$   
+
+
+imagenet dataset으로 학습된 AlexNet이 있다고 했을 때 AlexNet과 정확도가 같다면 1이 나올 것이고, 만약 method를 적용하여 만든 모델이 더 에러율이 낮다면 CE는 1보다 작은 값이 될 것이다. $c$는 어떤 종류의 손상을 가져올지를 정하고, $s$는 손상 정도를 얼마나 심하게 할지를 정한다. 그래서 모든 Corruption type과 Severity case에 대해 Top-1 error의 평균 값을 구하고 이를 AlexNet과 비교해 상대적으로 얼마나 우수한지를 평가한다.  
 
 
 # Reference 
