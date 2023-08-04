@@ -39,6 +39,38 @@ $E_{s,c}^f$ : Top-1 error of a network $f$
 
 imagenet dataset으로 학습된 AlexNet이 있다고 했을 때 AlexNet과 정확도가 같다면 1이 나올 것이고, 만약 method를 적용하여 만든 모델이 더 에러율이 낮다면 CE는 1보다 작은 값이 될 것이다. $c$는 어떤 종류의 손상을 가져올지를 정하고, $s$는 손상 정도를 얼마나 심하게 할지를 정한다. 그래서 모든 Corruption type과 Severity case에 대해 Top-1 error의 평균 값을 구하고 이를 AlexNet과 비교해 상대적으로 얼마나 우수한지를 평가한다.  
 
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/721766f6-6255-4e58-8ca9-c9d5a284dfce" height="70%" width="70%"></p>
+
+Severity는 위처럼 5단계로 있어서 Severity가 낮은 값부터 높은 값까지 종합적으로 평가하기에 용이하다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/38ef3876-c11b-40f8-9757-7759686c425f" height="70%" width="70%"></p>
+
+그리고 발생할 수 있는 데이터 손상 타입으로는 위와 같이 크게 4가지로 나눈다. 
+
+
+### Perturbation Dataset
+본 논문에서는 Perturbation에 대해서도 Robustness Benchmark를 제안한다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/e927b349-8694-4d39-885f-8d205fcd8365" height="35%" width="35%"></p>
+
+위 사진은 time series에 따른 이미지 변화이다. 그래서 각각 서로 다른 Perturbation을 서서히 가하는 것으로 볼 수 있다. 
+그래서 이러한 time series sequence는 30 frame까지 구성되고 각 frame은 이전 frame에 대해 Perturbation을 가한 것으로 볼 수 있다. 
+
+여기서 제안하는 Evaluation metric은 Flip Probability이다. 이는 쉽게 말해 이전 프레임과 현재 프레임이 서로 다른 클래스로 분류되는 지를 평가하는 것이다. 그래서 분류 결과가 뒤집히는(flipping)일이 적을수록 우수하다고 할 수 있다. 
+
+$$FP_p^f = \frac{1}{m(n-1)} \sum_{i=1}^m \sum_{j=2}^n 𝟙 (f(x_j^{(i)}) \neq f(x_{j-1}^{(i)})) = 𝕡_{x \sim S} (f(x_j^{(i)}) \neq f(x_{j-1}^{(i)}))$$
+
+$m$ : The perturbation sequences  
+$n$ : The number of frames  
+$p$ : Perturbation type  
+$S$ : $\left\lbrace x_1^{(i)}, x_2^{(i)}, ..., x_n^{(i)} \right\rbrace_{i=1}^m$
+
+perturbation sequences의 총 갯수가 m이라고 하고 한 sequences에서 frame의 수가 n이라 했을 때 전체 sequences를 다 확인하면서 각 sequences의 모든 frame을 보는데 여기서 frame은 2부터 시작해야 이전 frame과 비교할 수 있다. 
+
+
+# AugMix
+
+
 
 # Reference 
 ## Web Link
