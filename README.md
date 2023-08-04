@@ -36,3 +36,6 @@
 
 <p align="center"><img src="https://github.com/em-1001/AI/blob/master/Images/cat_detection.jpg"></p>
 
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/a8ed12ba-f8f7-4135-8882-1e044c151249"></p>
+
+
