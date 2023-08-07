@@ -1,10 +1,13 @@
 
 
+
 # Reference 
 ## Web Link 
 YOLOv5 : https://blog.roboflow.com/yolov5-improvements-and-evaluation/   
 YOLOv8 : https://blog.roboflow.com/whats-new-in-yolov8/       
-mAP : https://blog.roboflow.com/mean-average-precision/     
+mAP : https://blog.roboflow.com/mean-average-precision/  
+　　　https://a292run.tistory.com/entry/mean-Average-PrecisionmAP-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0-1   
+　　　https://donologue.tistory.com/405    
 SiLU : https://tae-jun.tistory.com/10
 
 ## Paper 
