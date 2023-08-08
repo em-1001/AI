@@ -8,7 +8,8 @@ YOLOv8 : https://blog.roboflow.com/whats-new-in-yolov8/
 mAP : https://blog.roboflow.com/mean-average-precision/  
 　　　https://a292run.tistory.com/entry/mean-Average-PrecisionmAP-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0-1   
 　　　https://donologue.tistory.com/405    
-SiLU : https://tae-jun.tistory.com/10
+SiLU : https://tae-jun.tistory.com/10     
+Weight Decay, BN : https://blog.janestreet.com/l2-regularization-and-batch-norm/
 
 ## Paper 
 Real-Time Flying Object Detection with YOLOv8 : https://arxiv.org/pdf/2305.09972.pdf   
