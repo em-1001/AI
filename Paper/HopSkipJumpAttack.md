@@ -269,7 +269,7 @@ $\phi_{x^{\star}}(x^{'}) = 1$인 상태를 유지하면서 최대한 Original im
 
 이때 distance metric인 $d$는 $L_p$-nroms을 통해 정의할 수 있다. 
 
-### An Iterative Algorithm for $L_2$ Distance 
+### An Iterative Algorithm for L2 Distance 
 $L_2$ Distance에서의 공격 알고리즘을 하나의 식으로 정리하면 다음과 같다. 
 
 <p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/5b12f039-a24c-4159-9e81-7a1f9b78aa1e" height="15%" width="15%"></p>
