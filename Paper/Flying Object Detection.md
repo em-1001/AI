@@ -66,8 +66,11 @@ nano (yolov8n), small (yolov8s), medium (yolov8m), large (yolov8l), and extra la
 small, medium, large 모델들의 parameters는 각각 (11151080, 25879480, & 43660680)이고, layers는 (225,295, & 365)이다. 본 논문에서 학습시킨 결과 small과 medium 사이에서는 mAP50-95에서 큰 성능향상이 있었으나 medium, large 사이에서는 그렇지 않았다고 한다. 또한 validation set에 대해서 small, medium, and large의 inference speed는 각각 4.1, 5.7, and 9.3 milliseconds 였다고 한다. 원래 목표였던 average inference speed는 30 to 60 frames for 1080p였고, medium size
 model을 multiple 1080p HD videos에서 테스트해본 결과 average total speed (pre-proccess speed(0.5ms) + inference speed(17.25ms) + post-process speed(2ms)) of 19.75 ms(50 frames per second)로 목표에 적합하여 모델을 medium size로 결정하고 hyper-parameters 튜닝을 진행했다고 한다. 
 
+## Loss Function and Update Rule
 
-
+box loss : https://arxiv.org/abs/1911.08287
+class loss : standard binary cross entropy
+distribution focal loss :  https://arxiv.org/abs/2006.04388
 
 
 # Reference 
