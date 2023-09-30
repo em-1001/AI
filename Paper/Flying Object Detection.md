@@ -37,6 +37,8 @@ $𝟙^{obj}_ {i j}$ : i번째 셀의 j번 바운딩 박스만을 학습하겠다
 $λ_{noobj}$ : 해당 셀에 객체가 존재하지 않는 경우, 즉 배경인 경우에는 바운딩 박스 학습에 영향을 미치지 않도록 0.5의 가중치를 곱해주어서 패널티를 낮춘다.    
 $𝟙^{noobj}_{i j}$ : i번째 셀과 j번째 바운딩 박스에 객체가 없는 경우에 수행 한다는 의미이다.
 
+3,4 번째 항은 각각 bouding box가 객체를 포함할 때와 배경일 때의 confidence error를 계산하고 마지막 5번째 항은 bouding box와 관계없이 각 셀마다 클래스를 분류하기 위한 오차이다. 
+
 
 
 # Real-Time Flying Object Detection with YOLOv8
