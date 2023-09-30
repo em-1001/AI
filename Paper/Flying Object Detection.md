@@ -3,6 +3,7 @@
 
 # Reference 
 ## Web Link 
+One-stage object detection : https://machinethink.net/blog/object-detection/  
 YOLOv5 : https://blog.roboflow.com/yolov5-improvements-and-evaluation/   
 YOLOv8 : https://blog.roboflow.com/whats-new-in-yolov8/       
 mAP : https://blog.roboflow.com/mean-average-precision/  
