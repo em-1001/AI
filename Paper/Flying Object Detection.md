@@ -1,5 +1,43 @@
 # Background
-## YOLOv1...
+## YOLOv1
+YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
+
+**바운딩 박스 B** 는 X, Y 좌표, 가로, 세로 크기 정보와 Confidence Score (Score)수치를 가지고 있다. Score는 B가 물체를 영역으로 잡고 있는지와 클래스를 잘 예측하였는지를 나타낸다. 본 논문에서는 Score를 간단하게 **Pr(Object) ∗ IOU** 로 정의하고 있는데, **Pr(Object)** 는 바운딩 박스 안에 물체가 존재할 확률이다. 만약 바운딩 박스가 배경만을 영역으로 잡고 있다면 Pr(Object)의 값이 0이므로 Score는 0이된다.
+
+**클래스 확률 C** 는 그리드 셀 안에 있는 그림의 분류 확률을 나타낸다. 기호로는 **Pr(Class_i |Object)** 로 표현하며 B가 배경이 아닌 객체를 포함하는 경우의 각 클래스의 조건부 확률이다. B가 배경을 예측했다면 확률은 0이 된다. 최종적으로 클래스 조건부 확률 C와 각 바운딩 박스의 Confidence 예측 값을 곱하면 각 박스의 클래스별 Confidence Score 수치를 구할 수 있다.
+
+$$Pr(Class_i |Object) * Pr(Object) * IOU = Pr(Class_i) * IOU$$
+
+### YOLOv1 Loss Function
+YOLOv1은 Training Network를 학습하기 위해 손실 함수를 설계하기 전 다음과 같은 원칙을 만들었다. 
+
+1. 이미지를 분류하는 classifier 문제를 바운딩 박스를 만드는 regression문제로 생각한다.
+2. 바운딩 박스를 잘 그렸는지 평가하는 Localization Error와 박스 안의 물체를 잘 분류했는지 평가하는 Classification Error의 패널티를 다르게 평가한다. 특히, 박스 안의 물체가 없는 경우에는 Confidence Score를 0으로 만들기 위해 Localization Error 에 더 높은 패널티를 부과한다.
+3. 많은 바운딩 박스중에 IOU 수치가 가장 높게 생성된 바운딩 박스만 학습에 참여한다. 이는 바운딩 박스를 잘 만드는 셀은 더욱 학습을 잘하도록 높은 Confidence Score를 주고 나머지 셀은 바운딩 박스를 잘 만들지 못하더라도 나중에 Non-max suppression을 통해 최적화 하기 위함이다.
+
+YOLO는 1번 원칙을 지키기 위해 Loss Function 에서 **Sum-Squared Error(SSD)** 를 이용한다. 그리고 2번 원칙을 만족하기 위해서 $λ_{coord}$ 와 $λ_{noobj}$ 두 개의 변수를 이용한다. 본 논문에서는 $λ_{coord} = 5, λ_{noobj} = 0.5$ 로 설정하였다. 아래는 YOLOv1의 Loss Function이다. 
+
+
+
+$$λ_{coord} \sum_{i=0}^{S^2} \sum_{j=0}^B 𝟙^{obj}_{i j} \left[(x_i - \hat{x}_i)^2 + (y_i - \hat{y}_i)^2 \right]$$
+
+$$+λ_{coord} \sum_{i=0}^{S^2} \sum_{j=0}^B 𝟙^{obj}_{i j} \left[(\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2 \right]$$
+
+$$+\sum_{i=0}^{S^2} \sum_{j=0}^B 𝟙^{obj}_{i j} \left(C_i - \hat{C}_i\right)^2$$
+
+$$+λ_{noobj} \sum_{i=0}^{S^2} \sum_{j=0}^B 𝟙^{noobj}_{i j} \left(C_i - \hat{C}_i\right)^2$$
+
+$$+\sum_{i=0}^{S^2} 𝟙^{obj}_ {i} \sum_{c \in classes} (p_i(c) - \hat{p}_i(c))^2$$  
+
+$S$ : 그리드 셀의 크기를 의미한다. 행렬 이기 때문에 전체 그리드 셀의 개수는 S² 가 된다.      
+$B$ : $S_i$ 셀의 바운딩 박스를 의미한다.    
+$C$ : 각 그리드 셀이 구분한 클래스와 같다.   
+$λ_{coord}$ : 5로 설정된 λ_coord 변수로서 Localization 에러에 5배 더 높은 패널티를 부여하기 위해서 사용한다.    
+$𝟙^{obj}_ {i j}$ : i번째 셀의 j번 바운딩 박스만을 학습하겠다는 의미로 사용하지만 모든 셀에 대해서 바운딩 박스 학습이 일어나지 않고 각 객체마다 IOU가 가장 높은 바운딩 박스인 경우에만 패널티를 부과해서 학습을 더 잘하도록 유도한다.  
+$λ_{noobj}$ : 해당 셀에 객체가 존재하지 않는 경우, 즉 배경인 경우에는 바운딩 박스 학습에 영향을 미치지 않도록 0.5의 가중치를 곱해주어서 패널티를 낮춘다.    
+$𝟙^{noobj}_{i j}$ : i번째 셀과 j번째 바운딩 박스에 객체가 없는 경우에 수행 한다는 의미이다.
+
+
 
 # Real-Time Flying Object Detection with YOLOv8
 본 논문은 현재 state-of-the-art인 YOLOv8을 이용한 비행체 탐지모델을 제안한다. 일반적으로 Real-time object detection은 object의 공간적 사이즈(spatial sizes), 종횡비(aspect ratios), 모델의 추론 속도(inference
