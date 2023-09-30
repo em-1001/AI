@@ -5,7 +5,7 @@
 본 논문은 현재 state-of-the-art인 YOLOv8을 이용한 비행체 탐지모델을 제안한다. 일반적으로 Real-time object detection은 object의 공간적 사이즈(spatial sizes), 종횡비(aspect ratios), 모델의 추론 속도(inference
 speed), 그리고 noise 등의 변수로 어려움이 있었다. 비행체는 위치(location), 크기(scale), 회전(rotation), 궤도(trajectory)가 매우 빠르게 변하기 때문에 앞선 문제들은 비행체를 탐지하는데 더욱 부각된다. 그렇기에 비행체의 이러한 변수에 대해 thorough하고 빠른 추론속도를 갖는 모델이 중요했다. 
 
-![image](https://github.com/em-1001/AI/assets/80628552/7c8e5c53-3e12-46fa-813f-6698c1b06538)
+<img src="https://github.com/em-1001/AI/assets/80628552/7c8e5c53-3e12-46fa-813f-6698c1b06538" height="80%" width="80%">
 
 본 논문에서는 dataset중 80%를 train, 20%을 validation으로 나누었다. 각 dataset의 이미지는 class number가 label되어있고, bounding box 가장자리의 좌표를 표시해놨다. 하나의 이미지에는 평균적으로 1.6개의 object가 있고, median image
 ratio는 416x416이다. 이미지는 auto orientation으로 전처리 되었으며, augmentations은 적용하지 않았다. 
