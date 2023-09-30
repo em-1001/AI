@@ -68,9 +68,9 @@ model을 multiple 1080p HD videos에서 테스트해본 결과 average total spe
 
 ## Loss Function and Update Rule
 
-box loss : https://arxiv.org/abs/1911.08287
-class loss : standard binary cross entropy
-distribution focal loss :  https://arxiv.org/abs/2006.04388
+box loss : https://arxiv.org/abs/1911.08287  
+class loss : standard binary cross entropy  
+distribution focal loss :  https://arxiv.org/abs/2006.04388  
 
 
 # Reference 
