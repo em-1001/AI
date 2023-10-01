@@ -67,6 +67,39 @@ small, medium, large 모델들의 parameters는 각각 (11151080, 25879480, & 43
 model을 multiple 1080p HD videos에서 테스트해본 결과 average total speed (pre-proccess speed(0.5ms) + inference speed(17.25ms) + post-process speed(2ms)) of 19.75 ms(50 frames per second)로 목표에 적합하여 모델을 medium size로 결정하고 hyper-parameters 튜닝을 진행했다고 한다. 
 
 ## Loss Function and Update Rule
+본 논문에서 제안하는 Loss Function을 일반화하면 아래와 같다. 
+
+$$L(θ) = \frac{λ_{box}}{N_{pos}}L_{box}(θ) + \frac{λ_{cls}}{N_{pos}}L_{cls}(θ) + \frac{λ_{dfl}}{N_{pos}}L_{dfl}(θ) + φ||θ||^2_2$$
+
+$$V^t = \beta V^{t-1} + ∇_θ L(θ^{t-1})$$
+
+$$θ^t = θ^{t-1} - ηV^t$$
+
+첫 번째 식은 일반화된 Loss Function으로 box loss, classification loss, distribution focal loss 각각의 Loss들을 합하고, weight decay인 $φ$를 활용해 마지막 항에서 regularization을 한다. 두 번째 식은 momentum $β$를 이용한 velocity term이다. 세 번째 식은 가중치 업데이트로 $η$는 learning rate이다. 
+
+YOLOv8의 loss function을 자세히 살펴보면 아래와 같다. 
+
+$$L = \frac{λ_ {box}}{N_ {pos}} \sum_ {x, y} 𝟙_ {c^{\star}_ {x, y}} \left[1 - q_ {x,y} + \frac{||b_ {x, y} - \hat{b}_ {x, y}||^2_2}{ρ^2} + α_ {x, y} v_ {x, y}\right]$$
+
+$$+\frac{λ_ {cls}}{N_ {pos}} \sum _{x,y} \sum _{c \in classes} y _c log(\hat{y} _c) + (1 - y _c) log(1 - \hat{y} _c)$$ 
+
+$$+\frac{λ_{dfl}}{N_{pos}} \sum_{x,y} 𝟙_{c^{\star}_ {x, y}} \left[ -(q_ {(x,y)+1} - q_{x,y})log(\hat{q}_ {x,y}) + (q_{x,y} - q_{(x,y)-1})log(\hat{q}_{(x,y)+1})\right]$$
+
+$where:$
+
+$$q_{x,y} = IOU_{x,y} = \frac{\hat{β}_ {x,y} ∩ β_{x,y}}{\hat{β}_ {x,y} ∪ β_{x,y}}$$
+
+$$v_{x,y} = \frac{4}{π^2}(arctan(\frac{w_{x,y}}{h_{x,y}}) - arctan(\frac{\hat{w}_ {x,y}}{\hat{h}_{x,y}}))^2$$
+
+$$α_{x,y} = \frac{v}{1 - q_{x,y}}$$
+
+$$\hat{y}_c = σ(·)$$
+
+$$\hat{q}_{x,y} = softmax(·)$$
+
+$and:$
+
+
 
 box loss : https://arxiv.org/abs/1911.08287  
 class loss : standard binary cross entropy  
