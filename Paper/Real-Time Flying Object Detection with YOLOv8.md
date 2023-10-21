@@ -1,4 +1,5 @@
 # Background
+## C-IOU, Cross Entropy, Focal Loss 등등.. 
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
 
