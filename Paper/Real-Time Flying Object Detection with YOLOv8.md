@@ -121,7 +121,8 @@ SiLU : https://tae-jun.tistory.com/10
 Weight Decay, BN : https://blog.janestreet.com/l2-regularization-and-batch-norm/  
 focal Loss : https://gaussian37.github.io/dl-concept-focal_loss/  
 cross entropy : https://velog.io/@rcchun/%EB%A8%B8%EC%8B%A0%EB%9F%AC%EB%8B%9D-%ED%81%AC%EB%A1%9C%EC%8A%A4-%EC%97%94%ED%8A%B8%EB%A1%9C%ED%94%BCcross-entropy  
-DIOU, CIOU : https://melona94.tistory.com/3
+DIOU, CIOU : https://melona94.tistory.com/3  
+YOLOv8 Loss 수정 : https://velog.io/@easyssun/YOLOv8-%EB%AA%A8%EB%8D%B8-loss-function-%EC%88%98%EC%A0%95  
 
 ## Paper 
 Real-Time Flying Object Detection with YOLOv8 : https://arxiv.org/pdf/2305.09972.pdf   
