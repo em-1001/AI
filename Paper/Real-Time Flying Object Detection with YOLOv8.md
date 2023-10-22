@@ -86,7 +86,7 @@ $$L = \frac{λ_ {box}}{N_ {pos}} \sum_ {x, y} 𝟙_ {c^{\star}_ {x, y}} \left[1 
 
 $$+\frac{λ_ {cls}}{N_ {pos}} \sum _{x,y} \sum _{c \in classes} y _c log(\hat{y} _c) + (1 - y _c) log(1 - \hat{y} _c)$$ 
 
-$$+\frac{λ_{dfl}}{N_{pos}} \sum_{x,y} 𝟙_{c^{\star}_ {x, y}} \left[ -(q_ {(x,y)+1} - q_{x,y})log(\hat{q}_ {x,y}) + (q_{x,y} - q_{(x,y)-1})log(\hat{q}_{(x,y)+1})\right]$$
+$$+\frac{λ_{dfl}}{N_{pos}} \sum_{x,y} 𝟙_{c^{\star}_ {x, y}} - \left[(q_ {(x,y)+1} - q_{x,y})log(\hat{q}_ {x,y}) + (q_{x,y} - q_{(x,y)-1})log(\hat{q}_{(x,y)+1})\right]$$
 
 $where:$
 
