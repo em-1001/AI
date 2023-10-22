@@ -28,7 +28,7 @@
 - [Improving Model Robustness](https://github.com/em-1001/AI/blob/master/Paper/Improving%20Model%20Robustness.md)
 
 ### Object Detection
-- [Real-Time Flying Object Detection with YOLOv8]
+- [Real-Time Flying Object Detection with YOLOv8](https://github.com/em-1001/AI/blob/master/Paper/Real-Time%20Flying%20Object%20Detection%20with%20YOLOv8.md)
 
 # Kaggle
 ### Multiclass Classification
