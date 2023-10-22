@@ -120,7 +120,8 @@ Weight Decay, BN : https://blog.janestreet.com/l2-regularization-and-batch-norm/
 Focal Loss : https://gaussian37.github.io/dl-concept-focal_loss/  
 　　　　 　https://woochan-autobiography.tistory.com/929  
 Cross Entropy : https://velog.io/@rcchun/%EB%A8%B8%EC%8B%A0%EB%9F%AC%EB%8B%9D-%ED%81%AC%EB%A1%9C%EC%8A%A4-%EC%97%94%ED%8A%B8%EB%A1%9C%ED%94%BCcross-entropy  
-DIOU, CIOU : https://melona94.tistory.com/3  
+DIOU, CIOU : https://melona94.tistory.com/3    
+QFL, DFL : https://pajamacoder.tistory.com/m/74  
 YOLOv8 Loss 수정 : https://velog.io/@easyssun/YOLOv8-%EB%AA%A8%EB%8D%B8-loss-function-%EC%88%98%EC%A0%95  
 
 ## Paper 
