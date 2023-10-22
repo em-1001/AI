@@ -4,7 +4,9 @@ Unknown Sniffer for Object Detection: Don’t Turn a Blind Eye to Unknown Object
 Generalized Focal Loss V2: Learning Reliable Localization Quality Estimation for Dense Object Detection : https://arxiv.org/pdf/2011.12885.pdf  
 
 # link 
-https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
+Object Detection] ATSS: Adaptive Training Sample Selection : https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
+
+Grounding DINO : SOTA Zero-Shot Object Detection : https://blog.roboflow.com/grounding-dino-zero-shot-object-detection/
 
 
 $$\hat{y} = \sigma_{i=0}^{n}P(y_{i})y_{i} $$
