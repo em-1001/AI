@@ -102,6 +102,7 @@ $$\hat{q}_{x,y} = softmax(·)$$
 
 $and:$
 
+알파는 non-overlapping 경우에 overlap area factor가 regression loss에 더 높은 우선순위를 갖게 한다. (https://silhyeonha-git.tistory.com/3)
 
 
 box loss : https://arxiv.org/abs/1911.08287  
