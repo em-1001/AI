@@ -33,10 +33,48 @@ $y_i$는 실제 클래스를 나타내는 값(0 또는 1)이고, $\hat{y}_i$는 
 
 위 식은 실제 분포(Ground Truth)인 $y_i$와 모델의 예측인 $\hat{y}_i$사이의 정보량을 측정하고 모델이 Ground Truth와 일치할수록, Cross Entropy의 값은 작아진다.  
 
+## GIoU, DIoU,  CIoU
+일반적으로 IoU-based loss는 다음과 같이 표현된다. 
 
+$$L = 1 - IoU + \mathcal{R}(B, B^{gt})$$
 
-## CIOU, Focal Loss 등등.. 
-CIOU 에서 ground truth와 pred의 $arctan \frac{w}{h}$ 차이를 구하는 이유가 $tan^{-1} \frac{w(가로)}{h(세로)}$의 값이 세타(각도)이고 이 둘의 차이를 통해 aspect ration(가로 세로 비)를의 일치성을 구하기 때문인 것 같다. 
+여기서 $R(B, B^{gt})$는  predicted box $B$와 target box $B^{gt}$에 대한 penalty term이다.  
+$1 - IoU$로만 Loss를 구할 경우 box가 겹치지 않는 case에 대해서 어느 정도의 오차로 교집합이 생기지 않은 것인지 알 수 없어서 gradient vanishing 문제가 발생했다. 이러한 문제를 해결하기 위해 penalty term을 추가한 것이다. 
+
+### Generalized-IoU(GIoU)
+Generalized-IoU(GIoU) 의 경우 Loss는 다음과 같이 계산된다. 
+
+$$L_{GIoU} = 1 - IoU + \frac{|C - B ∪ B^{gt}|}{|C|}$$
+
+여기서 $C$는 $B$와 $B^{gt}$를 모두 포함하는 최소 크기의 Box를 의미한다. Generalized-IoU는 겹치지 않는 박스에 대한 gradient vanishing 문제는 개선했지만 horizontal과 vertical에 대해서 에러가 크다. 이는 target box와 수평, 수직선을 이루는 Anchor box에 대해서는 $|C - B ∪ B^{gt}|$가 매우 작거나 0에 가까워서 IoU와 비슷하게 동작하기 때문이다. 또한 겹치지 않는 box에 대해서 일단 predicted box의 크기를 매우 키우고 IoU를 늘리는 동작 특성 때문에 수렴 속도가 매우 느리다. 
+
+### Distance-IoU(DIoU)
+GIoU가 면적 기반의 penalty term을 부여했다면, DIoU는 거리 기반의 penalty term을 부여한다. 
+DIoU의 penalty term은 다음과 같다. 
+
+$$\mathcal{R}_{DIoU} = \frac{\rho^2(b, b^{gt})}{c^2}$$
+
+$\rho^2$는 Euclidean거리이며 $c$는 $B$와 $B^{gt}$를 포함하는 가장 작은 Box의 대각선 거리이다. 
+
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/4abe5f78-388b-459f-a3f4-95e41a5fdb0a" height="30%" width="30%"></p>
+
+DIoU Loss는 두 개의 box가 완벽히 일치하면 0, 매우 멀어지면 $L_{GIoU} = L_{DIoU} \mapsto 2$가 된다. 이는 IoU가 0이 되고, penalty term이 1에 가깝게 되기 때문이다. Distance-IoU는 두 box의 중심 거리를 직접적으로 줄이기 때문에 GIoU에 비해 수렴이 빠르고, 거리기반이므로 수평, 수직방향에서 또한 수렴이 빠르다. 
+
+### Complete-IoU(CIoU)
+DIoU, CIoU를 제안한 논문에서 말하는 성공적인 Bounding Box Regression을 위한 3가지 조건은 overlap area, central point
+distance, aspect ratio이다. 이 중 overlap area, central point는 DIoU에서 이미 고려했고 여기에 aspect ratio를 고려한 penalty term을 추가한 것이 CIoU이다. CIoU penalty term는 다음과 같이 정의된다. 
+
+$$\mathcal{R}_{CIoU} = \frac{\rho^2(b, b^{gt})}{c^2} + \alpha v$$
+
+$$v = \frac{4}{π^2}(\arctan{\frac{w^{gt}}{h^{gt}}} - \arctan{\frac{w}{h}})^2$$
+
+$$\alpha = \frac{v}{(1 - IoU) + v}$$
+
+$v$의 경우 bbox는 직사각형이고 $\arctan{\frac{w}{h}} = \theta$이므로 $\theta$의 차이를 통해 aspect ratio를 구하게 된다. 이때 $v$에 $\frac{2}{π}$가 곱해지는 이유는 $\arctan$ 함수의 최대치가 $\frac{2}{π}$ 이므로 scale을 조정해주기 위해서이다. 
+
+$\alpha$는 trade-off 파라미터로 IoU가 큰 box에 대해 더 큰 penalty를 주게 된다. 
+
+## QFL, DFL
 
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
@@ -128,7 +166,7 @@ $where:$
 
 $$q_{x,y} = IOU_{x,y} = \frac{\hat{β}_ {x,y} ∩ β_{x,y}}{\hat{β}_ {x,y} ∪ β_{x,y}}$$
 
-$$v_{x,y} = \frac{4}{π^2}(arctan(\frac{w_{x,y}}{h_{x,y}}) - arctan(\frac{\hat{w}_ {x,y}}{\hat{h}_{x,y}}))^2$$
+$$v_{x,y} = \frac{4}{π^2}(\arctan{(\frac{w_{x,y}}{h_{x,y}})} - \arctan{(\frac{\hat{w}_ {x,y}}{\hat{h}_{x,y}})})^2$$
 
 $$α_{x,y} = \frac{v}{1 - q_{x,y}}$$
 
@@ -137,8 +175,6 @@ $$\hat{y}_c = σ(·)$$
 $$\hat{q}_{x,y} = softmax(·)$$
 
 $and:$
-
-알파는 non-overlapping 경우에 overlap area factor가 regression loss에 더 높은 우선순위를 갖게 한다. (https://silhyeonha-git.tistory.com/3)
 
 
 box loss : https://arxiv.org/abs/1911.08287  
@@ -157,7 +193,7 @@ Weight Decay, BN : https://blog.janestreet.com/l2-regularization-and-batch-norm/
 Focal Loss : https://gaussian37.github.io/dl-concept-focal_loss/  
 　　　　 　https://woochan-autobiography.tistory.com/929  
 Cross Entropy : https://sosoeasy.tistory.com/351  
-DIOU, CIOU : https://melona94.tistory.com/3    
+DIOU, CIOU : https://hongl.tistory.com/215    
 QFL, DFL : https://pajamacoder.tistory.com/m/74  
 YOLOv8 Loss 수정 : https://velog.io/@easyssun/YOLOv8-%EB%AA%A8%EB%8D%B8-loss-function-%EC%88%98%EC%A0%95  
 
