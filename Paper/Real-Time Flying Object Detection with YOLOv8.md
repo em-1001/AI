@@ -81,6 +81,24 @@ $$\frac{\partial v}{\partial w} = \frac{8}{π^2}(\arctan{\frac{w^{gt}}{h^{gt}}} 
 $$\frac{\partial v}{\partial h} = -\frac{8}{π^2}(\arctan{\frac{w^{gt}}{h^{gt}}} - \arctan{\frac{w}{h}}) \times \frac{w}{w^2 + h^2}$$ 
 
 ## QFL, DFL
+One-stage detector는 기본적으로 object detection을 dense classification과 localization (i.e., bounding box regression)을 통해서 한다. classification의 경우 Focal Loss로 최적화 되고, box location은 Dirac delta distribution으로 학습된다. QFL, DFL를 제안한 논문에서 말하는 기존 방식의 문제는 크게 두 가지이다. 
+1. 학습, 추론 시 quality estimation과 classification의 비일관성   
+학습시 classification score 와 centerness(또는 iou)score 가 별개로 학습되지만 inference 시에는 nms전에 두 score를 join해서 사용(element wise multiplication)한다. 이러한 두 score의 비일관성은 성능저하로 이어질 수 있고 논문에서는 두 score를 train, test 모두에서 joint해주어 둘 사이의 상관성을 크게 갖도록 유도했다. 
+2. Dirac delta distribution의 Inflexible  
+기존 방식들은 positive sample 위치에만 box gt를 할당해 regression 하는 방식을 취하는데 이는 dirac delta distribution으로 볼 수 있다. dirac delta distribution는 물체의 occlusion, shadow, blur등으로 인한 물체 경계 불분명 등의 문제를 잘 커버하지 못한다.
+
+### Quality Focal Loss(QFL)
+training과 test 시의 inconsistency를 해결하기 위해서 supervision을 기존의 one-hot label에서 float target $y ∈ [0, 1]$이 가능하도록 soften하였다. 참고로 여기서 $y=0$은 0 quality score를 갖는 negative samples을, $0 < y ≤ 1$는 target IoU score $y$를 갖는 positive samples을 의미하게 된다. 논문에서 제안하는 QFL는 다음과 같이 계산된다. 
+
+$$QFL(\sigma) = -|y - \sigma|^{\beta}((1-y)\log{(1 - \sigma)} + y \log{(\sigma)})$$
+
+기존의 Focal Loss의 경우 $\{ 1, 0 \}$의 discrete labels만 지원하였지만 QFL에서 사용하는 새로운 label은 decimals을 포함하므로 위와 같은 식이 나왔고 기존 FL에서 바뀐 부분은 다음과 같다. 
+
+1. 기존 cross entropy part인 $-\log{(p_t)}$가 complete version인 $-((1-y)\log{(1 - \sigma)} + y \log{(\sigma)})$로 확장되었다.   
+2. scaling factor인 $(1-p_t)^{\gamma}$가 estimation $\sigma$와 continuous labe $y$ 사이의 absolute distance인 $|y - \sigma|^{\beta}$로 변경되었다. ($| · |$는 non-negativit를 보장한다.)
+
+### Distribution Focal Loss
+
 
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
