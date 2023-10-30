@@ -122,6 +122,8 @@ $$DFL(S_i, S_{i+1}) = -((y_{i+1} - y) \log{(S_i)} + (y - y_i) \log{(S_{i+1})})$$
 DFL의 global minimum solution은 $S_i = \frac{y_{i+1} - y}{y_{i+1} - y_i}, \ S_{i+1} = \frac{y - y_i}{y_{i+1} - y_i}$가 되고 이를 통해 계산한 estimated regression target $\hat{y}$는 corresponding labe $y$에 무한히 가깝다.    
 i.e $\hat{y} = \sum P(y_j)y_j = S_i y_i + S_{i+1} y_{i+1} = \frac{y_{i+1} - y}{y_{i+1} - y_i} y_i + \frac{y - y_i}{y_{i+1} - y_i} y_{i+1} = y$
 
+### Generalized Focal Loss (GFL)
+
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
 
