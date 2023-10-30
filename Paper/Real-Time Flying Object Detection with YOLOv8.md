@@ -80,7 +80,7 @@ $$\frac{\partial v}{\partial w} = \frac{8}{π^2}(\arctan{\frac{w^{gt}}{h^{gt}}} 
 
 $$\frac{\partial v}{\partial h} = -\frac{8}{π^2}(\arctan{\frac{w^{gt}}{h^{gt}}} - \arctan{\frac{w}{h}}) \times \frac{w}{w^2 + h^2}$$ 
 
-## QFL, DFL
+## QFL, DFL, GFL
 One-stage detector는 기본적으로 object detection을 dense classification과 localization (i.e., bounding box regression)을 통해서 한다. classification의 경우 Focal Loss로 최적화 되고, box location은 Dirac delta distribution으로 학습된다. QFL, DFL를 제안한 논문에서 말하는 기존 방식의 문제는 크게 두 가지이다. 
 1. 학습, 추론 시 quality estimation과 classification의 비일관성   
 학습시 classification score 와 centerness(또는 iou)score 가 별개로 학습되지만 inference 시에는 nms전에 두 score를 join해서 사용(element wise multiplication)한다. 이러한 두 score의 비일관성은 성능저하로 이어질 수 있고 논문에서는 두 score를 train, test 모두에서 joint해주어 둘 사이의 상관성을 크게 갖도록 유도했다. 
@@ -98,7 +98,29 @@ $$QFL(\sigma) = -|y - \sigma|^{\beta}((1-y)\log{(1 - \sigma)} + y \log{(\sigma)}
 2. scaling factor인 $(1-p_t)^{\gamma}$가 estimation $\sigma$와 continuous labe $y$ 사이의 absolute distance인 $|y - \sigma|^{\beta}$로 변경되었다. ($| · |$는 non-negativit를 보장한다.)
 
 ### Distribution Focal Loss
+기존 bounding box regression의 경우 앞서 언급했듯이 Dirac delta distribution $\delta(x - y)$를 이용해서 regression되었다. 
+이는 주로 fully connected layers를 통해 implemented되며 아래와 같다. 
 
+$$y=\int_{-\infty}^{+\infty} \delta(x - y)x \ dx$$
+
+논문에서는 Dirac delta나 Gaussian 대신에 General distribution $P(x)$을 직접 학습하는 것을 제안한다. label $y$의 범위는 $y_0 ≤ y ≤ y_n, n \in \mathbb{N}^+$에 속하고 estimated value인 $\hat{y}$를 다음과 같이 계산한다. 물론 $\hat{y}$도 $y_0 ≤ \hat{y} ≤ y_n$를 만족한다. 
+
+$$\hat{y}=\int_{-\infty}^{+\infty} P(x)x \ dx = \int_{y_0}^{y_n} P(x)x \ dx$$
+
+이때 학습하는 label의 분포가 연속적이지 않고 이산적이므로 위 식을 아래와 같이 나타낼 수 있다. 
+
+$$\hat{y} = \sum_{i=0}^{n} P(y_i)y_i$$
+
+이때 intervals $∆$은 간단하게 $∆ = 1$로 하고, $\sum P(y_i) = 1$을 만족한다. 
+위 식에서 $y_i$는 object 중심으로부터 각 변까지의 거리의 discrete한 값이고 $P(y_i)$는 네트워크가 추론한 현 anchor에서 boundary까지의 거리가 $y_i$일 확률이다. 따라서 DFL은 object boundary 까지의 거리를 직접적으로 추론하는 것이 아니라 각 거리에 대한 확률 값이 있으면 이 값들의 기댓값으로 추론하는 것이다. 
+
+$P(x)$는 softmax $S(\cdot)$을 통해 쉽게 구해질 수 있다. 또한 $P(y_i)$를 간단하게 $S_i$로 표현한다. DFL을 통한 학습은 $P(x)$의 형태가 target인 $y$에 가까운 값이 높은 probabilities를 갖도록 유도한다. 따라서 DFL은 target $y$에 가장 가까운 두 값 $y_i, y_{i+1}$ ($y_i ≤ y ≤ y_{i+1}$)의 probabilities를 높임으로서 네트워크가 빠르게 label $y$에 집중할 수 있도록 한다. 
+DFL은 QFL의 complete cross entropy part를 이용하여 다음과 같이 계산된다. 
+
+$$DFL(S_i, S_{i+1}) = -((y_{i+1} - y) \log{(S_i)} + (y - y_i) \log{(S_{i+1})})$$
+
+DFL의 global minimum solution은 $S_i = \frac{y_{i+1} - y}{y_{i+1} - y_i}, \ S_{i+1} = \frac{y - y_i}{y_{i+1} - y_i}$가 되고 이를 통해 계산한 estimated regression target $\hat{y}$는 corresponding labe $y$에 무한히 가깝다.    
+i.e $\hat{y} = \sum P(y_j)y_j = S_i y_i + S_{i+1} y_{i+1} = \frac{y_{i+1} - y}{y_{i+1} - y_i} y_i + \frac{y - y_i}{y_{i+1} - y_i} y_{i+1} = y$
 
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
