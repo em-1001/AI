@@ -120,9 +120,22 @@ DFL은 QFL의 complete cross entropy part를 이용하여 다음과 같이 계�
 $$DFL(S_i, S_{i+1}) = -((y_{i+1} - y) \log{(S_i)} + (y - y_i) \log{(S_{i+1})})$$
 
 DFL의 global minimum solution은 $S_i = \frac{y_{i+1} - y}{y_{i+1} - y_i}, \ S_{i+1} = \frac{y - y_i}{y_{i+1} - y_i}$가 되고 이를 통해 계산한 estimated regression target $\hat{y}$는 corresponding labe $y$에 무한히 가깝다.    
-i.e $\hat{y} = \sum P(y_j)y_j = S_i y_i + S_{i+1} y_{i+1} = \frac{y_{i+1} - y}{y_{i+1} - y_i} y_i + \frac{y - y_i}{y_{i+1} - y_i} y_{i+1} = y$
+i.e. $\hat{y} = \sum P(y_j)y_j = S_i y_i + S_{i+1} y_{i+1} = \frac{y_{i+1} - y}{y_{i+1} - y_i} y_i + \frac{y - y_i}{y_{i+1} - y_i} y_{i+1} = y$
 
 ### Generalized Focal Loss (GFL)
+QFL와 DFL를 일반화된 형태로 합친것이 GFL이다. $y_l, y_r \ (y_l < y_r)$에 대한 확률은 $p_{y_l}, p_{y_r} \ (p_{y_l}≥0, p_{y_r}≥0, p_{y_l} + p_{y_r} = 1)$이고, 최종 prediction 값의 linear combination은 $\hat{y} = y_lp_{y_l} + y_rp_{y_r} \ (y_l ≤ \hat{y} ≤ y_r)$이다. prediction $\hat{y}$에 대한 corresponding continuous label인 $y$도 $y_l ≤ y ≤ y_r$를 만족한다. $|y - \hat{y}|^{\beta} \ (\beta ≥ 0)$를 modulating factor로 계산하여 GFL은 다음과 같이 구해진다. 
+
+$$GFL(p_{y_l}, p_{y_r}) = -|y - (y_lp_{y_l} + y_rp_{y_r})|^{\beta} ((y_{r} - y) \log{(p_{y_l})} + (y - y_l) \log{(p_{y_r})})$$
+
+논문에서는 QFL와 DFL가 GFL의 special cases라고 한다. 
+
+**QFL** : Having $y_l = 0, y_r = 1, p_{y_r} = \sigma$ and $p_{y_l} = 1 - \sigma$ in GFL, the form of QFL can be written as:  
+$$QFL(\sigma) = GFL(1-\sigma, \sigma) = -|y - \sigma|^{\beta}((1-y)\log{(1 - \sigma)} + y \log{(\sigma)})$$
+
+$y_l ≤ y_r$이므로 당연히 $y_l = 0, y_r = 1$가 된다. $p_{y_r} = \sigma$인 이유는 $\sigma$가 모델의 예측 확률이고, $y=1$일 때 $y_r=1$이므로 $y_r$의 확률에 대한 엔트로피 즉, $1 \cdot \log (p_{y_r}) = 1 \cdot \log (\sigma)$가 되어야 하기 때문이고 반대의 경우도 마찬가지이다. 
+
+**DFL** : By substituting $\beta = 0, y_l = y_i, y_r = y_{i+1}, p_{y_l} = P(y_l) = P(y_i) = S_i, p_{y_r} = P(y_r) = P(y_{i+1}) = S_{i+1}$ in GFL, we can have DFL:  
+$$DFL(S_i, S_{i+1}) = GFL(S_i, S_{i+1}) = -((y_{i+1} - y) \log{(S_i)} + (y - y_i) \log{(S_{i+1})})$$
 
 ## YOLOv1
 YOLOv1이 사용하는 네트워크에 이미지를 통과시키면 결과로 SxS 그리드 셀의 클래스 확률 C와 예측된 바운딩 박스 B, 그리고 Confidence Score가 주어진다. 여기서 SxS로 나눈 그리드 셀 중 물체의 중앙과 가장 가까운 셀이 객체를 탐지하는 역할을 하게된다. 그리고 각 셀은 바운딩 박스 B와 분류한 클래스의 확률인 C를 예측한다. 
