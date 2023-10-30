@@ -97,7 +97,7 @@ $$QFL(\sigma) = -|y - \sigma|^{\beta}((1-y)\log{(1 - \sigma)} + y \log{(\sigma)}
 1. 기존 cross entropy part인 $-\log{(p_t)}$가 complete version인 $-((1-y)\log{(1 - \sigma)} + y \log{(\sigma)})$로 확장되었다.   
 2. scaling factor인 $(1-p_t)^{\gamma}$가 estimation $\sigma$와 continuous labe $y$ 사이의 absolute distance인 $|y - \sigma|^{\beta}$로 변경되었다. ($| · |$는 non-negativit를 보장한다.)
 
-### Distribution Focal Loss
+### Distribution Focal Loss(DFL)
 기존 bounding box regression의 경우 앞서 언급했듯이 Dirac delta distribution $\delta(x - y)$를 이용해서 regression되었다. 
 이는 주로 fully connected layers를 통해 implemented되며 아래와 같다. 
 
