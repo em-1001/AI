@@ -5,6 +5,8 @@ Generalized Focal Loss V2: Learning Reliable Localization Quality Estimation for
 
 RTMDet: An Empirical Study of Designing Real-Time Object Detectors : https://arxiv.org/pdf/2212.07784.pdf
 
+YOLOX: Exceeding YOLO Series in 2021 : https://arxiv.org/pdf/2107.08430.pdf
+
 # link 
 Object Detection] ATSS: Adaptive Training Sample Selection : https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
 
