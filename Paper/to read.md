@@ -9,6 +9,8 @@ YOLOX: Exceeding YOLO Series in 2021 : https://arxiv.org/pdf/2107.08430.pdf
 
 Backbones-Review: Feature Extraction Networks for Deep Learning and Deep Reinforcement Learning Approaches : https://arxiv.org/pdf/2206.08016.pdf 
 
+Feature Pyramid Networks for Object Detection : https://arxiv.org/pdf/1612.03144.pdf
+
 # link 
 Object Detection] ATSS: Adaptive Training Sample Selection : https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
 
