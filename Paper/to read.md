@@ -11,6 +11,8 @@ Backbones-Review: Feature Extraction Networks for Deep Learning and Deep Reinfor
 
 Feature Pyramid Networks for Object Detection : https://arxiv.org/pdf/1612.03144.pdf
 
+Elastic Deformations for Data Augmentation in Breast Cancer Mass Detection : https://web.fe.up.pt/~jsc/publications/conferences/2018EMecaBHI.pdf
+
 # link 
 Object Detection] ATSS: Adaptive Training Sample Selection : https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
 
