@@ -3,6 +3,8 @@ Unknown Sniffer for Object Detection: Don’t Turn a Blind Eye to Unknown Object
 
 Generalized Focal Loss V2: Learning Reliable Localization Quality Estimation for Dense Object Detection : https://arxiv.org/pdf/2011.12885.pdf  
 
+RTMDet: An Empirical Study of Designing Real-Time Object Detectors : https://arxiv.org/pdf/2212.07784.pdf
+
 # link 
 Object Detection] ATSS: Adaptive Training Sample Selection : https://velog.io/@markany/%EB%94%A5-%EB%9F%AC%EB%8B%9D-Object-Detection-Adaptive-Training-Sample-Selection
 
