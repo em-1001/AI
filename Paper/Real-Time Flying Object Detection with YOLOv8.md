@@ -153,7 +153,7 @@ YOLOv1은 Training Network를 학습하기 위해 손실 함수를 설계하기 
 2. 바운딩 박스를 잘 그렸는지 평가하는 Localization Error와 박스 안의 물체를 잘 분류했는지 평가하는 Classification Error의 패널티를 다르게 평가한다. 특히, 박스 안의 물체가 없는 경우에는 Confidence Score를 0으로 만들기 위해 Localization Error 에 더 높은 패널티를 부과한다.
 3. 많은 바운딩 박스중에 IOU 수치가 가장 높게 생성된 바운딩 박스만 학습에 참여한다. 이는 바운딩 박스를 잘 만드는 셀은 더욱 학습을 잘하도록 높은 Confidence Score를 주고 나머지 셀은 바운딩 박스를 잘 만들지 못하더라도 나중에 Non-max suppression을 통해 최적화 하기 위함이다.
 
-YOLO는 1번 원칙을 지키기 위해 Loss Function 에서 **Sum-Squared Error(SSD)** 를 이용한다. 그리고 2번 원칙을 만족하기 위해서 $λ_{coord}$ 와 $λ_{noobj}$ 두 개의 변수를 이용한다. 본 논문에서는 $λ_{coord} = 5, λ_{noobj} = 0.5$ 로 설정하였다. 아래는 YOLOv1의 Loss Function이다. 
+YOLO는 1번 원칙을 지키기 위해 Loss Function 에서 **Sum-Squared Error(SSE)** 를 이용한다. 그리고 2번 원칙을 만족하기 위해서 $λ_{coord}$ 와 $λ_{noobj}$ 두 개의 변수를 이용한다. 본 논문에서는 $λ_{coord} = 5, λ_{noobj} = 0.5$ 로 설정하였다. 아래는 YOLOv1의 Loss Function이다. 
 
 
 
