@@ -16,7 +16,8 @@ Robustness Certificates와 같은 기법들이 나왔는데 이런 방어 기법
 
 ### Adversarial training
 
-<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/523ba308-0597-46ee-be1b-0c5f7660145f" height="80%" width="80%"></p>
+<p align="center"><img src="https://github.com/em-1001/AI/assets/80628552/be22d28c-e619-4fcf-92d3-6e44c59abe4d" height="80%" width="80%"></p>
+
 
 우선 적대적 예제라는 것은 인간의 눈에 띄지 않게 약간 변형된 데이터로, 뉴럴 네트워크의 부정확한 결과를 유도하게 된다. 
 이러한 적대적 예제를 이용한 공격에 가장 효과적이라고 알려진 방어 기법은 Adversarial training이다. 
