@@ -422,7 +422,7 @@ Decision-based attack이라는 매우 어려운 공격 상황에서 query-effici
 
 # Reference
 ## Web Links
-https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28    
+HopSkipJumpAttack : https://www.youtube.com/watch?v=KbelFArAgNQ&list=PLRx0vPvlEmdADpce8aoBhNnDaaHQN1Typ&index=28    
 interpolation : https://ko.wikipedia.org/wiki/%EC%84%A0%ED%98%95_%EB%B3%B4%EA%B0%84%EB%B2%95     
 monte carlo method : https://en.wikipedia.org/wiki/Monte_Carlo_method
 
